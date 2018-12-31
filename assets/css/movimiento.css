@@ -1,0 +1,21 @@
+.inputTipo{
+	padding-left: 5%;
+}
+
+.fieldTab{
+	padding-top: 5%;
+}
+
+.disabledLi{
+	pointer-events: none;
+	opacity: 0.6;
+}
+
+.displayNone{
+	display: none;
+}
+
+.imgDoc{
+	width: 80px;
+	height: 80px;
+}

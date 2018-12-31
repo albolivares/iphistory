@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="applyTransform.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="bindZoomButtons.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="deselect.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="getCountryId.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="getPin.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="getPinId.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="getPins.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="highlight.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="isSelected.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="makeDraggable.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="placePins.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="positionPins.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="removePin.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="removePins.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="reset.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="resize.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="select.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="selectIndex.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="setBackgroundColor.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="setColors.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="setNormalizeFunction.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="setScale.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="setScaleColors.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="setValues.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="unhighlight.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="zoomIn.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+<file name="zoomOut.js" server="teek.cultura.gob.mx//export/home/paginas/www2/" local="131427136210000000" remote="131427136210000000" />
+</dwsync>
