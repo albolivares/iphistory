@@ -348,6 +348,206 @@ function getRows($params = array()){
         return ($query->num_rows() > 0)?$query->result_array():FALSE;
     }
 
+/*Registro de autores*/
 
+
+public function getPaises(){
+/*SELECT `id`, `paisnombre` FROM `ips_paises` WHERE 1*/
+	$this->db->select('id, paisnombre');
+	$this->db->from('ips_paises p');
+	$query=$this->db->get();
+	return ($query->num_rows() > 0)?$query->result():FALSE;
+}
+
+public function getNacionalidad(){
+	/*SELECT `id`, `codigo_pais`, `nacionalidad`, `cve_nacionalidad` FROM `ips_nacionalidades` WHERE 1*/
+$this->db->select('id, nacionalidad');
+	$this->db->from('ips_nacionalidades p');
+	$query=$this->db->get();
+	return ($query->num_rows() > 0)?$query->result():FALSE;
+}
+
+public function getEstados(){
+	/*SELECT `id`, `entidad`, `abreviatura` FROM `ips_estados` WHERE 1*/
+	
+	$this->db->select('id, entidad, abreviatura');
+	$this->db->from('ips_estados e');
+	$query=$this->db->get();
+	return ($query->num_rows() > 0)?$query->result():FALSE;
+	
+}
+
+public function getCiudades($id){
+	/*SELECT `id_ciudad`, `ciudad`, `id_estado`, `catalog_key` FROM `ips_ciudades` WHERE 1*/
+	if(is_numeric($id)){
+	$this->db->select('id_ciudad, ciudad, catalog_key');
+	$this->db->from('ips_ciudades e');
+	$this->db->where('id_estado', $id);
+	$query=$this->db->get();
+	return ($query->num_rows() > 0)?$query->result():FALSE;
+	}else return false; 
+}
+
+public function getAvatarComodin(){
+/*SELECT id_avatar, nombre_avatar, imagen_avatar, es_comodin, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica FROM ips_avatar WHERE 1*/
+	$this->db->select('id_avatar, nombre_avatar, imagen_avatar');
+	$this->db->from('ips_avatar');
+	$this->db->where('es_comodin', 1);
+	$query=$this->db->get();
+	return ($query->num_rows() > 0)?$query->result():FALSE;
+}
+
+public function getRegister($id=false,$es_autor_register,$estatus=false){
+	
+	$this->db->select('id_register, email_register, password_register, ap_paterno_register, ap_materno_register, nombre_register, fch_nacimiento_register, genero_register, pseudonimo_register, con_avatar_register, id_avatar, foto_register, estatus_register, es_lector_register, es_autor_register, id_pais, p.nacionalidad, id_estado, e.entidad, id_ciudad, minibio_register, semblanza_register, numero_contrato_register, comentarios_register, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica');
+	$this->db->from('ips_register u');
+	$this->db->join('ips_nacionalidades	 p','p.id=u.id_pais','left');
+	$this->db->join('ips_estados e','e.id=id_estado','left');
+	if($id) $this->db->where('id_register', $id);
+	if($es_autor_register) $this->db->where('es_autor_register', '1');
+	else $this->db->where('es_lector_register', '1');
+	$query=$this->db->get();
+	return ($query->num_rows() > 0)?$query->result():FALSE;
+
+}
+
+
+public function setAutor(){/*INSERT INTO `ips_register`(`id_register`, `email_register`, `password_register`, `ap_paterno_register`, `ap_materno_register`, `nombre_register`, `fch_nacimiento_register`, `genero_register`, `pseudonimo_register`, `con_avatar_register`, `id_avatar`, `foto_register`, `estatus_register`, `es_lector_register`, `es_autor_register`, `id_pais`, `id_estado`, `id_ciudad`, `minibio_register`, `semblanza_register`, `numero_contrato_register`, `comentarios_register`, `fecha_alta`, `usuario_alta`, `fecha_modifica`, `usuario_modifica`) VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9],[value-10],[value-11],[value-12],[value-13],[value-14],[value-15],[value-16],[value-17],[value-18],[value-19],[value-20],[value-21],[value-22],[value-23],[value-24],[value-25],[value-26])*/
+
+ 	$salt = '5&JDDlwz%Rwh!t2Yg-Igae@QxPzFTSId';
+    $hash= $this->input->post('pswd');
+    $password= md5($salt.$hash);          	
+   $data = array(
+	'email_register' => $this->input->post('correo'), 
+	'password_register' => $password,
+	'ap_paterno_register' => $this->input->post('apellido_p'),
+	'ap_materno_register' => $this->input->post('apellido_m'), 
+	'nombre_register' => $this->input->post('nombre'), 
+	'fch_nacimiento_register' => $this->input->post('fecha_inicio_hist'), 
+	'genero_register' => $this->input->post('genero'),
+	'pseudonimo_register' => $this->input->post('pseudonimo'),
+	'con_avatar_register' => $this->input->post('avatar'),
+	'id_avatar' => $this->input->post('avatar_sel'),
+	'foto_register' => $this->input->post('portada_sm'),
+	'estatus_register' => $this->input->post('estatus'),
+	'es_lector_register' => 0,
+	'es_autor_register' => 1,
+	'id_pais' => $this->input->post('nacionalidad'),
+	'id_estado' => $this->input->post('estado'),
+	'id_ciudad' => $this->input->post('ciudad'), 
+	'minibio_register' => $this->input->post('minibio'),
+	'semblanza_register' => $this->input->post('historia'),  
+	'numero_contrato_register' => $this->input->post('num_contrato'),	
+	'usuario_alta' => $this->session->userdata('user_id'),
+	'fecha_alta' => date('Y-m-d H:i:s')
+    ); 
+
+   $insertcomp=$this->db->insert('ips_register', $data); 
+   $id_comp=$this->db->insert_id();
+   
+
+	$arrCategoria=$this->input->post('my-categoria');
+	$this->db->where('id_register', $id_comp); $this->db->delete('ips_topics_register');
+   	if($arrCategoria){
+   	foreach ($arrCategoria as $key => $categoria) {
+	   $data = array(
+			'id_categoria' => $categoria,
+			'id_register' => $id_comp,
+			
+	    ); 
+   		$insertinvita=$this->db->insert('ips_topics_register', $data);
+   		}
+	}
+
+   return $id_comp;
+}
+
+public function updateAutor(){/*INSERT INTO `ips_register`(`id_register`, `email_register`, `password_register`, `ap_paterno_register`, `ap_materno_register`, `nombre_register`, `fch_nacimiento_register`, `genero_register`, `pseudonimo_register`, `con_avatar_register`, `id_avatar`, `foto_register`, `estatus_register`, `es_lector_register`, `es_autor_register`, `id_pais`, `id_estado`, `id_ciudad`, `minibio_register`, `semblanza_register`, `numero_contrato_register`, `comentarios_register`, `fecha_alta`, `usuario_alta`, `fecha_modifica`, `usuario_modifica`) VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9],[value-10],[value-11],[value-12],[value-13],[value-14],[value-15],[value-16],[value-17],[value-18],[value-19],[value-20],[value-21],[value-22],[value-23],[value-24],[value-25],[value-26])*/
+
+
+ 	if($this->input->post('pswd_act')!=$this->input->post('pswd')) {
+ 	$salt = '5&JDDlwz%Rwh!t2Yg-Igae@QxPzFTSId';
+    $hash= $this->input->post('pswd');
+    $password= md5($salt.$hash);
+    $data = array(
+	'email_register' => $this->input->post('correo'), 
+	'password_register' => $password,
+	'ap_paterno_register' => $this->input->post('apellido_p'),
+	'ap_materno_register' => $this->input->post('apellido_m'), 
+	'nombre_register' => $this->input->post('nombre'), 
+	'fch_nacimiento_register' => $this->input->post('fecha_inicio_hist'), 
+	'genero_register' => $this->input->post('genero'),
+	'pseudonimo_register' => $this->input->post('pseudonimo'),
+	'con_avatar_register' => $this->input->post('avatar'),
+	'id_avatar' => $this->input->post('avatar_sel'),
+	'foto_register' => $this->input->post('portada_sm'),
+	'estatus_register' => $this->input->post('estatus'),
+	'es_lector_register' => 0,
+	'es_autor_register' => 1,
+	'id_pais' => $this->input->post('nacionalidad'),
+	'id_estado' => $this->input->post('estado'),
+	'id_ciudad' => $this->input->post('ciudad'), 
+	'minibio_register' => $this->input->post('minibio'),
+	'semblanza_register' => $this->input->post('historia'),  
+	'numero_contrato_register' => $this->input->post('num_contrato'),	
+	'usuario_modifica' => $this->session->userdata('user_id'),
+	'fecha_modifica' => date('Y-m-d H:i:s')
+    );          	 
+ 	}else{$data = array(
+	'email_register' => $this->input->post('correo'), 
+	'ap_paterno_register' => $this->input->post('apellido_p'),
+	'ap_materno_register' => $this->input->post('apellido_m'), 
+	'nombre_register' => $this->input->post('nombre'), 
+	'fch_nacimiento_register' => $this->input->post('fecha_inicio_hist'), 
+	'genero_register' => $this->input->post('genero'),
+	'pseudonimo_register' => $this->input->post('pseudonimo'),
+	'con_avatar_register' => $this->input->post('avatar'),
+	'id_avatar' => $this->input->post('avatar_sel'),
+	'foto_register' => $this->input->post('portada_sm'),
+	'estatus_register' => $this->input->post('estatus'),
+	'es_lector_register' => 0,
+	'es_autor_register' => 1,
+	'id_pais' => $this->input->post('nacionalidad'),
+	'id_estado' => $this->input->post('estado'),
+	'id_ciudad' => $this->input->post('ciudad'), 
+	'minibio_register' => $this->input->post('minibio'),
+	'semblanza_register' => $this->input->post('historia'),  
+	'numero_contrato_register' => $this->input->post('num_contrato'),	
+	'usuario_modifica' => $this->session->userdata('user_id'),
+	'fecha_modifica' => date('Y-m-d H:i:s')
+    );}
+
+	$id_comp=$this->input->post('id_obj');
+   
+
+    
+
+   if(is_numeric($id_comp)){
+   	$this->db->where('id_register', $this->input->post('id_obj'));
+   	$this->db->update('ips_register', $data);
+   
+
+	$arrCategoria=$this->input->post('my-categoria');
+	$this->db->where('id_register', $id_comp); $this->db->delete('ips_topics_register');
+   	if($arrCategoria){
+   	foreach ($arrCategoria as $key => $categoria) {
+	   $data = array(
+			'id_categoria' => $categoria,
+			'id_register' => $id_comp,
+			
+	    ); 
+   		$insertinvita=$this->db->insert('ips_topics_register', $data);
+   		}
+	}
+	}
+   return $id_comp;
+}
+
+public	function getAutTopic($id){
+	$query = $this->db->select('id_categoria');			
+	$query = $this->db->where('id_register', $id);			
+	$query = $this->db->get('ips_topics_register');
+	return $query->result();
+}
 
 }
