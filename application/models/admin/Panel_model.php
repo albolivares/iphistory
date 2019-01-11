@@ -550,4 +550,48 @@ public	function getAutTopic($id){
 	return $query->result();
 }
 
+/*Recomendaciones*/
+public function getRecomendaciones($id=false,$estatus=false){
+	/*SELECT id_recom, fecha_registro, fecha_inicio_recom, fecha_fin_recom, estatus_recom, orden, id_hist, usuario_alta, fecha_alta, usuario_modifica, fecha_modifica FROM ips_recomendaciones WHERE 1*/
+	$query = $this->db->select('id_recom, fecha_registro, fecha_inicio_recom, fecha_fin_recom, estatus_recom, orden, id_hist, usuario_alta, fecha_alta, usuario_modifica, fecha_modifica');			
+	if(is_numeric($id)) $query = $this->db->where('id_recom', $id);
+	if($estatus) $query = $this->db->where('estatus_recom', $estatus);			
+	$query = $this->db->get('ips_recomendaciones');
+	return $query->result();
+}
+
+public function getSeccion(){
+	$query = $this->db->select('id_seccion,seccion');						
+	$query = $this->db->get('ips_secciones');
+	return $query->result();
+}
+
+
+function getHistBusc($params = array()){
+
+	$this->db->select(' id_hist, titulo_hist, duracion_hist' );
+	$this->db->from('ips_historias');
+	$this->db->where('id_estatus_hist', 1);
+        //filter data by searched keywords
+        if(!empty($params['search']['keywords'])){
+            $this->db->like('titulo_hist',$params['search']['keywords']);
+        }
+        //sort data by ascending or desceding order
+        if(!empty($params['search']['sortBy'])){
+            $this->db->order_by('titulo_hist',$params['search']['sortBy']);
+        }else{
+            $this->db->order_by('id_hist','desc');
+        }
+        //set start and limit
+        if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit'],$params['start']);
+        }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit']);
+        }
+        //get records
+        $query = $this->db->get();
+        return ($query->num_rows() > 0)?$query->result():FALSE;
+    }
+
+
 }
