@@ -29,6 +29,23 @@ class Autocompletado extends My_Controller
 		
 	}
 	
+
+	function get_autocomplete(){
+		if (isset($_GET['term'])) {
+		  	$conditions['search']['keywords'] = $_GET['term'];
+		  	$result = $this->panel_bd->getHistBusc($conditions);
+		   	if (count($result) > 0) {
+		    foreach ($result as $row)
+		     	$arr_result[] = array(
+					'label'			=> $row->titulo_hist,
+					'description'	=> $row->duracion_hist,
+					'id_hist'	=> $row->id_hist,
+				);
+		     	echo json_encode($arr_result);
+		   	}
+		}
+	}
+
 	public function autocompletar()
 	{
 		//si es una petición ajax y existe una variable post

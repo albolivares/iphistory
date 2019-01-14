@@ -112,3 +112,21 @@ $(document).ready(function(){
     });*/
             
 })
+
+
+$(document).ready(function(){
+
+ var base_url1 = $('#base_url').val();
+        //hacemos la petición al método autocompletar del controlador autocompletado
+        //pasando la variable info
+
+            $('#title').autocomplete({
+                source: base_url1+'admin/autocompletado/get_autocomplete',
+                select: function (event, ui) {
+                    $('[name="title"]').val(ui.item.label); 
+                    //$('[name="description"]').val(ui.item.description);
+                    $('[name="id_hist"]').val(ui.item.id_hist); 
+                }
+            });
+
+        });

@@ -142,9 +142,10 @@ $(function () {
 
 $(document).ready(function(){  
 
-$("#contAva").hide(); $("#contUp").hide();
-    /*tinymce.init({
-      selector: '#historia',
+//$("#contAva").hide(); $("#contUp").hide();
+    tinymce.init({
+        mode : "specific_textareas",
+    editor_selector : "mceEditor",
       height: 300,
       menubar: false,
       plugins: [
@@ -155,7 +156,7 @@ $("#contAva").hide(); $("#contUp").hide();
       toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
       
     });
-*/
+
     /*tinymce.init({
       selector: '#minibio',
       height: 300,

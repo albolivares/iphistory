@@ -37,21 +37,15 @@ class Recomendacion extends My_Controller {
     if (!$this->ion_auth->logged_in()) { redirect('auth/login', 'refresh');    }
     $this->data['acc']='nvo';
     $this->data['js'] = ['upload/jquery.iframe-transport.js', 'upload/jquery.fileupload.js','jquery.multi-select.js', 'recomendacion.js'];
-    $this->data['rsSerie'] = $this->panel_bd->getSerie(1,'');
+    
     $this->data['rsCategoria'] = $this->panel_bd->getCategoria();
     $this->data['rsSeccion'] = $this->panel_bd->getSeccion();
     $this->data['id_obj']='';
     $this->data['estatusId']='0';
-    $this->data['duracionId']='';
-    $this->data['seId']='';
-
-    $this->data['portada_bg']='';
-    $this->data['portada_sm']='';
-    $this->data['teaser']='';
-    $this->data['audio']='';
-    $this->data['arrCath']='';$this->data['arrSec']='';
+    $this->data['arrCath']='';$this->data['arrSec']='';$this->data['id_hist']='';
     $this->form_validation->set_rules('estatus','Por favor seleccione el estatus', 'trim|required');
-    $this->form_validation->set_rules('titulo_hist','Por favor escriba el título', 'trim|required');
+    $this->form_validation->set_rules('title','Por favor escriba el título', 'trim|required');
+    $this->form_validation->set_rules('id_hist','Por favor escriba una historia registrada.', 'trim|required');
  
       if ($this->form_validation->run() === FALSE)
      {
@@ -60,6 +54,13 @@ class Recomendacion extends My_Controller {
 
       $this->data['titulo_hist'] = array('name'  => 'titulo_hist', 'id'    => 'titulo_hist', 'type'  => 'text', 'value' => $this->form_validation->set_value('titulo_hist'), 'class' => 'form-control', 'required'=>'',
         'data-error'=>'Por favor escriba el título');
+
+      $this->data['title'] = array('name'  => 'title', 'id'    => 'title', 
+        'type'  => 'text', 
+        'value' => $this->form_validation->set_value('title'), 
+        'class' => 'form-control', 'required'=>'',
+        'data-error'=>'Por favor escriba el título', 'placeholder'=>'Escribe tu búsqueda');
+
 
  $this->data['hashtag_hist'] = array('name'  => 'hashtag_hist', 'id'    => 'hashtag_hist', 'type'  => 'text', 'value' => $this->form_validation->set_value('hashtag_hist'), 'class' => 'form-control');
 
@@ -114,19 +115,20 @@ class Recomendacion extends My_Controller {
   {
     if (!$this->ion_auth->logged_in() || !is_numeric($id)) { redirect('auth/login', 'refresh');    }
     $this->data['acc']='mod';
-    $this->data['js'] = ['upload/jquery.iframe-transport.js', 'upload/jquery.fileupload.js','jquery.multi-select.js', 'serie.js'];
+    $this->data['js'] = ['upload/jquery.iframe-transport.js', 'upload/jquery.fileupload.js','jquery.multi-select.js', 'recomendacion.js'];
     
     $this->data['rsCategoria'] = $this->panel_bd->getCategoria();
-    $this->data['rsTiempo'] = $this->panel_bd->getTiempo();
-    $rsHistoria=$this->panel_bd->getSerie('',$id);
+    $this->data['rsSeccion'] = $this->panel_bd->getSeccion();
+    $rsHistoria=$this->panel_bd->getRecomendaciones($id,'');
     if($rsHistoria) $rsHistoria=$rsHistoria[0];
-    $this->data['id_obj']=$rsHistoria->id_serie;
-    $this->data['estatusId']=$rsHistoria->estatus_serie;
+
+    $this->data['id_obj']=$rsHistoria->id_recom;
+    $this->data['estatusId']=$rsHistoria->estatus_recom;
+    $this->data['id_hist']=$rsHistoria->id_hist;
+
     
-    $this->data['portada_bg']=$rsHistoria->portada_serie_bg;
-    $this->data['portada_sm']=$rsHistoria->portada_serie_sm;
     
-    $rscath=$this->panel_bd->getSerieCategoria($id);
+    $rscath=$this->panel_bd->getRecomendacionCategoria($id);
     $arrCath=array();
     foreach ($rscath as $key => $cath) {
        array_push($arrCath,$cath->id_categoria);
@@ -134,44 +136,41 @@ class Recomendacion extends My_Controller {
      } 
      //print_r($arrCath);
      $this->data['arrCath']=$arrCath;
+
+
+    $rssecc=$this->panel_bd->getRecomendacionSeccion($id);
+    $arrSec=array();
+    foreach ($rssecc as $key => $cath) {
+       array_push($arrSec,$cath->id_seccion);
+       
+     } 
+     //print_r($arrCath);
+     $this->data['arrSec']=$arrSec;
      
     
     $this->form_validation->set_rules('estatus','Por favor seleccione el estatus', 'trim|required');
-    $this->form_validation->set_rules('titulo_hist','Por favor escriba el título', 'trim|required');
+    $this->form_validation->set_rules('title','Por favor escriba el título', 'trim|required');
+    $this->form_validation->set_rules('id_hist','Por favor escriba una historia registrada.', 'trim|required');
     
       if ($this->form_validation->run() === FALSE)
      {
 
       $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+/*r.id_recom, fecha_registro, fecha_inicio_recom, fecha_fin_recom, estatus_recom, orden, r.id_hist, h.titulo_hist, h.usuario_publica_hist, u.id_register, u.ap_paterno_register, u.ap_materno_register,u.nombre_register, r.usuario_alta, r.fecha_alta, r.usuario_modifica, r.fecha_modifica*/
+    
 
-/*id_serie, titulo_serie, estatus_serie, fecha_alta, portada_serie_bg, portada_serie_sm, fecha_inicio_serie, fecha_fin_serie, copy_serie, hashtag_serie, usuario_alta, fecha_modifica, usuario_modifica*/
-
-
-      $this->data['titulo_hist'] = array('name'  => 'titulo_hist', 'id'    => 'titulo_hist', 
+      $this->data['title'] = array('name'  => 'title', 'id'    => 'title', 
         'type'  => 'text', 
-        'value' => ($this->form_validation->set_value('titulo_hist', $rsHistoria->titulo_serie)) ? $this->form_validation->set_value('titulo_hist', $rsHistoria->titulo_serie) : $this->form_validation->set_value('titulo_hist'), 
+        'value' => ($this->form_validation->set_value('title', $rsHistoria->titulo_hist)) ? $this->form_validation->set_value('title', $rsHistoria->titulo_hist) : $this->form_validation->set_value('title'), 
         'class' => 'form-control', 'required'=>'',
-        'data-error'=>'Por favor escriba el título');
-
- $this->data['hashtag_hist'] = array('name'  => 'hashtag_hist', 'id'    => 'hashtag_hist', 'type'  => 'text', 'value' => ($this->form_validation->set_value('hashtag_hist', $rsHistoria->hashtag_serie)) ? $this->form_validation->set_value('hashtag_hist', $rsHistoria->hashtag_serie) : $this->form_validation->set_value('hashtag_hist'), 'class' => 'form-control');
-
-      $this->data['copy_hist'] = array(
-        'name'  => 'copy_hist',
-        'id'    => 'copy_hist',
-        'rows'        => '3',
-        'cols'        => '3',
-        'value' => ($this->form_validation->set_value('copy_hist', $rsHistoria->copy_serie)) ? $this->form_validation->set_value('copy_hist', $rsHistoria->copy_serie) : $this->form_validation->set_value('copy_hist'),
-        'class' => 'form-control',
-        'required'=>'',
-        'data-error'=>'Por favor escriba la copy'        
-      );
+        'data-error'=>'Por favor escriba el título', 'placeholder'=>'Escribe tu búsqueda');
 
 
    $this->data['fecha_inicio_hist'] = array(
         'name'  => 'fecha_inicio_hist',
         'id'    => 'fecha_inicio_hist',
         'type'  => 'text',
-        'value' => ($this->form_validation->set_value('fecha_inicio_hist', $rsHistoria->fecha_inicio_serie)) ? $this->form_validation->set_value('fecha_inicio_hist', $rsHistoria->fecha_inicio_serie) : $this->form_validation->set_value('fecha_inicio_hist'),
+        'value' => ($this->form_validation->set_value('fecha_inicio_hist', $rsHistoria->fecha_inicio_recom)) ? $this->form_validation->set_value('fecha_inicio_hist', $rsHistoria->fecha_inicio_recom) : $this->form_validation->set_value('fecha_inicio_hist'),
         'class' => 'form-control date-picker ginput_container',
         'required'=>'',
         'maxlength'=>10,
@@ -183,7 +182,7 @@ class Recomendacion extends My_Controller {
         'name'  => 'fecha_fin_hist',
         'id'    => 'fecha_fin_hist',
         'type'  => 'text',
-        'value' => ($this->form_validation->set_value('fecha_fin_hist', $rsHistoria->fecha_fin_serie)) ? $this->form_validation->set_value('fecha_fin_hist', $rsHistoria->fecha_fin_serie) : $this->form_validation->set_value('fecha_fin_hist'),
+        'value' => ($this->form_validation->set_value('fecha_fin_hist', $rsHistoria->fecha_fin_recom)) ? $this->form_validation->set_value('fecha_fin_hist', $rsHistoria->fecha_fin_recom) : $this->form_validation->set_value('fecha_fin_hist'),
         'class' => 'form-control date-picker ginput_container',
         'required'=>'',
         'maxlength'=>10,
@@ -191,12 +190,12 @@ class Recomendacion extends My_Controller {
         'autocomplete'=>"off"
       );
 
-    $this->render('admin/serie_form', $this->data);
+    $this->render('admin/recomendacion_form', $this->data);
     }else{
     
-        $this->panel_bd->updateSerie();
+        $this->panel_bd->updateRecomendacion();
 
-        redirect(base_url().'admin/serie');
+        redirect(base_url().'admin/recomendacion');
      }      
   
      

@@ -412,8 +412,7 @@ public function getRegister($id=false,$es_autor_register,$estatus=false){
 }
 
 
-public function setAutor(){/*INSERT INTO `ips_register`(`id_register`, `email_register`, `password_register`, `ap_paterno_register`, `ap_materno_register`, `nombre_register`, `fch_nacimiento_register`, `genero_register`, `pseudonimo_register`, `con_avatar_register`, `id_avatar`, `foto_register`, `estatus_register`, `es_lector_register`, `es_autor_register`, `id_pais`, `id_estado`, `id_ciudad`, `minibio_register`, `semblanza_register`, `numero_contrato_register`, `comentarios_register`, `fecha_alta`, `usuario_alta`, `fecha_modifica`, `usuario_modifica`) VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9],[value-10],[value-11],[value-12],[value-13],[value-14],[value-15],[value-16],[value-17],[value-18],[value-19],[value-20],[value-21],[value-22],[value-23],[value-24],[value-25],[value-26])*/
-
+public function setAutor(){
  	$salt = '5&JDDlwz%Rwh!t2Yg-Igae@QxPzFTSId';
     $hash= $this->input->post('pswd');
     $password= md5($salt.$hash);          	
@@ -457,6 +456,47 @@ public function setAutor(){/*INSERT INTO `ips_register`(`id_register`, `email_re
 	    ); 
    		$insertinvita=$this->db->insert('ips_topics_register', $data);
    		}
+	}
+
+	if($id_comp){
+		/*datos fiscales*/
+		/*SELECT id_fiscal, id_tipo_persona, rfc_fiscal, razon_social, domiclio_fiscal, cif_archivo, id_register, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica FROM ips_fiscal WHERE 1*/
+
+$dataf = array(
+	'id_tipo_persona' => $this->input->post('tipo_persona'), 
+	'rfc_fiscal' => $this->input->post('rfc'),
+	'razon_social' => $this->input->post('razons'), 
+	'domiclio_fiscal' => $this->input->post('domiciliof'), 
+	'cif_archivo' => '', 
+	'id_register' => $id_comp,	
+	'usuario_alta' => $this->session->userdata('user_id'),
+	'fecha_alta' => date('Y-m-d H:i:s')
+    ); 
+
+   $insertcomp=$this->db->insert('ips_fiscal', $dataf); 
+   $id_compf=$this->db->insert_id();
+
+
+		/*datos bancarios*/
+
+		/*SELECT id_dato_bancario, nombre_titular_banco, cuenta_banco, clabe_banco, numero_tarjeta_banco, id_register, id_banco, sucursal_banco, numero_cliente_banco, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica FROM ips_datos_bancarios WHERE 1*/
+$datab = array(
+	'nombre_titular_banco' => $this->input->post('nombre_cuenta'), 
+	'cuenta_banco' => $this->input->post('num_cuenta'),
+	'clabe_banco' => $this->input->post('clabe'), 
+	'numero_tarjeta_banco' => $this->input->post('num_tarjeta'), 
+	'sucursal_banco' => $this->input->post('sucursal'), 
+	'numero_cliente_banco' => $this->input->post('num_cliente'), 
+	'id_banco' => '', 
+	'id_register' => $id_comp,	
+	'usuario_alta' => $this->session->userdata('user_id'),
+	'fecha_alta' => date('Y-m-d H:i:s')
+    ); 
+
+   $insertcomp=$this->db->insert('ips_datos_bancarios', $datab); 
+   $id_compb=$this->db->insert_id();
+   
+
 	}
 
    return $id_comp;
@@ -539,6 +579,46 @@ public function updateAutor(){/*INSERT INTO `ips_register`(`id_register`, `email
    		$insertinvita=$this->db->insert('ips_topics_register', $data);
    		}
 	}
+
+/*datos fiscales*/
+		/*SELECT id_fiscal, id_tipo_persona, rfc_fiscal, razon_social, domiclio_fiscal, cif_archivo, id_register, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica FROM ips_fiscal WHERE 1*/
+$this->db->where('id_register', $id_comp); $this->db->delete('ips_fiscal');
+$dataf = array(
+	'id_tipo_persona' => $this->input->post('tipo_persona'), 
+	'rfc_fiscal' => $this->input->post('rfc'),
+	'razon_social' => $this->input->post('razons'), 
+	'domiclio_fiscal' => $this->input->post('domiciliof'), 
+	'cif_archivo' => '', 
+	'id_register' => $id_comp,	
+	'usuario_alta' => $this->session->userdata('user_id'),
+	'fecha_alta' => date('Y-m-d H:i:s')
+    ); 
+if($this->input->post('tipo_persona')){
+   $insertcomp=$this->db->insert('ips_fiscal', $dataf); 
+   $id_compf=$this->db->insert_id();
+}
+
+		/*datos bancarios*/
+
+		/*SELECT id_dato_bancario, nombre_titular_banco, cuenta_banco, clabe_banco, numero_tarjeta_banco, id_register, id_banco, sucursal_banco, numero_cliente_banco, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica FROM ips_datos_bancarios WHERE 1*/
+		$this->db->where('id_register', $id_comp); $this->db->delete('ips_datos_bancarios');
+$datab = array(
+	'nombre_titular_banco' => $this->input->post('nombre_cuenta'), 
+	'cuenta_banco' => $this->input->post('num_cuenta'),
+	'clabe_banco' => $this->input->post('clabe'), 
+	'numero_tarjeta_banco' => $this->input->post('num_tarjeta'), 
+	'sucursal_banco' => $this->input->post('sucursal'), 
+	'numero_cliente_banco' => $this->input->post('num_cliente'), 
+	'id_banco' => '', 
+	'id_register' => $id_comp,	
+	'usuario_alta' => $this->session->userdata('user_id'),
+	'fecha_alta' => date('Y-m-d H:i:s')
+    ); 
+
+   $insertcomp=$this->db->insert('ips_datos_bancarios', $datab); 
+   $id_compb=$this->db->insert_id();
+   
+
 	}
    return $id_comp;
 }
@@ -552,11 +632,13 @@ public	function getAutTopic($id){
 
 /*Recomendaciones*/
 public function getRecomendaciones($id=false,$estatus=false){
-	/*SELECT id_recom, fecha_registro, fecha_inicio_recom, fecha_fin_recom, estatus_recom, orden, id_hist, usuario_alta, fecha_alta, usuario_modifica, fecha_modifica FROM ips_recomendaciones WHERE 1*/
-	$query = $this->db->select('id_recom, fecha_registro, fecha_inicio_recom, fecha_fin_recom, estatus_recom, orden, id_hist, usuario_alta, fecha_alta, usuario_modifica, fecha_modifica');			
+	$query = $this->db->select('r.id_recom, fecha_registro, fecha_inicio_recom, fecha_fin_recom, estatus_recom, orden, r.id_hist, h.titulo_hist, h.usuario_publica_hist, u.id_register, u.ap_paterno_register, u.ap_materno_register,u.nombre_register, r.usuario_alta, r.fecha_alta, r.usuario_modifica, r.fecha_modifica');			
 	if(is_numeric($id)) $query = $this->db->where('id_recom', $id);
 	if($estatus) $query = $this->db->where('estatus_recom', $estatus);			
-	$query = $this->db->get('ips_recomendaciones');
+	$query = $this->db->join('ips_historias h', 'h.id_hist=r.id_hist');
+	$query = $this->db->join('ips_register u','u.id_register=h.id_register');
+	$query = $this->db->where('estatus_recom<>',2);
+	$query = $this->db->get('ips_recomendaciones r');
 	return $query->result();
 }
 
@@ -593,5 +675,185 @@ function getHistBusc($params = array()){
         return ($query->num_rows() > 0)?$query->result():FALSE;
     }
 
+public function setRecomendacion(){
+ $data = array(
+	'fecha_inicio_recom' => $this->input->post('fecha_inicio_hist'),
+	'fecha_fin_recom' => $this->input->post('fecha_fin_hist'),
+	'estatus_recom' => $this->input->post('estatus'),
+	'id_hist' => $this->input->post('id_hist'), 
+	'usuario_alta' => $this->session->userdata('user_id'),
+	'fecha_alta' => date('Y-m-d H:i:s')
+    ); 
+
+   $insertcomp=$this->db->insert('ips_recomendaciones', $data); 
+   $id_comp=$this->db->insert_id();
+   
+
+	$arrHistoria=$this->input->post('my-categoria');
+	$arrSeccion=$this->input->post('my-seccion');
+	if($id_comp){
+	$this->db->where('id_recom', $id_comp); $this->db->delete('ips_recomendaciones_x_categorias');
+   	if($arrHistoria){
+   		foreach ($arrHistoria as $key => $historia) {
+	   		$data = array(
+			'id_categoria' => $historia,
+			'id_recom' => $id_comp,
+	    ); 
+   		$insertinvita=$this->db->insert('ips_recomendaciones_x_categorias', $data);
+   		}
+   	}
+   	$this->db->where('id_recom', $id_comp); $this->db->delete('ips_secciones_x_recomendaciones');
+   	if($arrSeccion){
+   		foreach ($arrSeccion as $key => $seccion) {
+	   		$data = array(
+			'id_seccion' => $seccion,
+			'id_recom' => $id_comp,
+	    ); 
+   		$insertinvita=$this->db->insert('ips_secciones_x_recomendaciones', $data);
+   		}
+   	}	
+	}
+   return $id_comp;
+
+
+}
+
+public function updateRecomendacion(){
+   $data = array(
+	'fecha_inicio_recom' => $this->input->post('fecha_inicio_hist'),
+	'fecha_fin_recom' => $this->input->post('fecha_fin_hist'),
+	'estatus_recom' => $this->input->post('estatus'),
+	'id_hist' => $this->input->post('id_hist'), 
+	'usuario_modifica' => $this->session->userdata('user_id'),
+	'fecha_modifica' => date('Y-m-d H:i:s')
+    ); 
+
+	$id_comp=$this->input->post('id_obj');
+   if(is_numeric($id_comp)){
+   	$this->db->where('id_recom', $this->input->post('id_obj'));
+   	$this->db->update('ips_recomendaciones', $data);
+
+	$arrHistoria=$this->input->post('my-categoria');
+	$arrSeccion=$this->input->post('my-seccion');
+	if($id_comp){
+	$this->db->where('id_recom', $id_comp); $this->db->delete('ips_recomendaciones_x_categorias');
+   	if($arrHistoria){
+   		foreach ($arrHistoria as $key => $historia) {
+	   		$data = array(
+			'id_categoria' => $historia,
+			'id_recom' => $id_comp,
+	    ); 
+   		$insertinvita=$this->db->insert('ips_recomendaciones_x_categorias', $data);
+   		}
+   	}
+   	$this->db->where('id_recom', $id_comp); $this->db->delete('ips_secciones_x_recomendaciones');
+   	if($arrSeccion){
+   		foreach ($arrSeccion as $key => $seccion) {
+	   		$data = array(
+			'id_seccion' => $seccion,
+			'id_recom' => $id_comp,
+	    ); 
+   		$insertinvita=$this->db->insert('ips_secciones_x_recomendaciones', $data);
+   		}
+   	}	
+	}
+}
+   return $id_comp;
+
+
+}
+
+public	function getRecomendacionCategoria($id){
+	$query = $this->db->select('id_recom, id_categoria');			
+	$query = $this->db->where('id_recom', $id);			
+	$query = $this->db->get('ips_recomendaciones_x_categorias');
+	return $query->result();
+}
+
+
+public	function getRecomendacionSeccion($id){
+	$query = $this->db->select('id_recom, id_seccion');			
+	$query = $this->db->where('id_recom', $id);			
+	$query = $this->db->get('ips_secciones_x_recomendaciones');
+	return $query->result();
+}
+
+/*Suscripciones*/
+
+public function getSuscripciones($id=false,$estatus=false){
+$query = $this->db->select('id_suscripcion, titulo_suscripcion, descripcion_suscripcion, tipo_suscripcion, precio_suscripcion, estatus_suscripcion, num_historias_suscripcion, id_duracion_suscr, orden_suscripcion, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica');			
+	if(is_numeric($id)) $query = $this->db->where('id_suscripcion', $id);
+	if($estatus) $query = $this->db->where('estatus_suscripcion', $estatus);			
+	$query = $this->db->where('estatus_suscripcion<>',2);
+	$query = $this->db->get('ips_suscripciones r');
+	return $query->result();
+
+}
+
+public function getDuracionSuscripcion(){
+	$query = $this->db->select('id_duracion_suscr, duracion_suscr');					
+	$query = $this->db->get('ips_duraciones_suscripciones');
+	return $query->result();
+}
+
+
+public function setSuscripcion(){
+	/*id_suscripcion, titulo_suscripcion, descripcion_suscripcion, tipo_suscripcion, precio_suscripcion, estatus_suscripcion, num_historias_suscripcion, id_duracion_suscr, orden_suscripcion, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica*/
+ $data = array(
+	'titulo_suscripcion' => $this->input->post('titulo_hist'),
+	'descripcion_suscripcion' => $this->input->post('descripcion'),
+	'estatus_suscripcion' => $this->input->post('estatus'),
+	'tipo_suscripcion' => $this->input->post('tipo'),
+	'precio_suscripcion' => $this->input->post('precio'),
+	'num_historias_suscripcion' => $this->input->post('num_historias'),
+	'id_duracion_suscr' => $this->input->post('duracion'), 
+	'orden_suscripcion' => $this->input->post('orden'), 
+	'usuario_alta' => $this->session->userdata('user_id'),
+	'fecha_alta' => date('Y-m-d H:i:s')
+    ); 
+
+   $insertcomp=$this->db->insert('ips_suscripciones', $data); 
+   $id_comp=$this->db->insert_id();
+   return $id_comp;
+}  
+
+
+public function updateSuscripcion(){
+	/*id_suscripcion, titulo_suscripcion, descripcion_suscripcion, tipo_suscripcion, precio_suscripcion, estatus_suscripcion, num_historias_suscripcion, id_duracion_suscr, orden_suscripcion, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica*/
+ $data = array(
+	'titulo_suscripcion' => $this->input->post('titulo_hist'),
+	'descripcion_suscripcion' => $this->input->post('descripcion'),
+	'estatus_suscripcion' => $this->input->post('estatus'),
+	'tipo_suscripcion' => $this->input->post('tipo'),
+	'precio_suscripcion' => $this->input->post('precio'),
+	'num_historias_suscripcion' => $this->input->post('num_historias'),
+	'id_duracion_suscr' => $this->input->post('duracion'), 
+	'orden_suscripcion' => $this->input->post('orden'), 
+	'usuario_modifica' => $this->session->userdata('user_id'),
+	'fecha_modifica' => date('Y-m-d H:i:s')
+    ); 
+
+   $this->db->where('id_suscripcion', $this->input->post('id_obj'));
+   	$this->db->update('ips_suscripciones', $data);
+
+   return $id_comp;
+}   
+
+
+public function eliRegistro($tipo, $id){
+if(is_numeric($id) ){
+ if($tipo=='suscripcion'){	
+		$data = array(
+		'estatus_suscripcion' => 2,
+		'usuario_modifica' => $this->session->userdata('user_id'),
+		'fecha_modifica' => date('Y-m-d H:i:s')
+    	); 
+  	 	$this->db->where('id_suscripcion', $id);
+   		$this->db->update('ips_suscripciones', $data);
+	}
+ }	 	
+	/**/ 	
+
+}
 
 }

@@ -14,37 +14,38 @@
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
-            <a href="<?=base_url().'admin/recomendacion/nueva' ?>" class="btn btn-default">+ Agregar nueva</a><br/><br/>
+            <a href="<?=base_url().'admin/suscripcion/nueva' ?>" class="btn btn-default">+ Agregar nueva</a><br/><br/>
             <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                       <thead>
                         <tr>
                           <th>Título</th>
-                          <th>Autor</th>
-                          <th>Categoría</th>
-                          <th>Sección</th>
-                          <th>Fecha inicio</th>
-                          <th>Fecha fin</th>
+                          <th>Descripción</th>
+                          <th>Precio</th>
+                          <th>Fecha registro</th>
                           <th>Estatus</th>
                           <th>Accion</th>
                         </tr>
                       </thead>
                       <tbody>
                         <?php 
-                        if($rsRecomienda){/*SELECT id_recom, fecha_registro, fecha_inicio_recom, fecha_fin_recom, estatus_recom, orden, id_hist, usuario_alta, fecha_alta, usuario_modifica, fecha_modifica*/
-                        foreach ($rsRecomienda as $index => $value) { ?>
+                        if($rsSuscripcion){
+                        foreach ($rsSuscripcion as $index => $value) { ?>
                           <tr>
-                            <td><?=$value->titulo_hist?></td>
-                            <td><?=$value->nombre_register.' '.$value->ap_paterno_register?></td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td><?=$value->fecha_inicio_recom?></td>
-                            <td><?=$value->fecha_fin_recom?></td>
-                            <td><?=($value->estatus_recom==0)? 'No publicado':'Publicado'; ?></td>
+                            <td><?=$value->titulo_suscripcion?></td>
+                            <td><?=$value->descripcion_suscripcion?></td>
+                          
+                            <td><?=$value->precio_suscripcion?></td>
+                            <td><?=$value->fecha_alta?></td>
+                            <td><?=($value->estatus_suscripcion==0)? 'Inactiva':'Activa'; ?></td>
                              <td>
                               
-                              <a href="<?= base_url() . 'admin/recomendacion/editar/' . $value->id_recom; ?>">
+                              <a href="<?= base_url() . 'admin/suscripcion/editar/' . $value->id_suscripcion; ?>">
                                 <button type="button" class="btn btn-round" style="background: #AE1141">
                                   <i class="fa fa-pencil" style="color: #FFFFFF"></i></button></a>
+                              <a class="verifica_resp" href="<?= base_url() . 'admin/suscripcion/eliminar/' . $value->id_suscripcion; ?>">
+                                <button type="button" class="btn btn-round" style="background: #AE1141">
+                                  <i class="fa fa-close" style="color: #FFFFFF"></i></button></a>
+
 
                             </td>
                           </tr>  
@@ -58,3 +59,4 @@
         </div> 
       </div>
 </div><!--.right_col-->    
+<div class="unique">¿Desea eliminar el registro?</div>

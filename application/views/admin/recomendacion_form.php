@@ -47,16 +47,18 @@
     </div>
 	
 
-	<div class="col-md-12 col-sm-12 col-xs-12">
-	<label for="titulo_hist">Título:</label>
-	<?php //echo form_input($titulo_hist);?>
-
-<div class="wrapper">
- <input type="text" name="autocompletar" maxlength="15" onpaste="return false" class="autocompletar form-control" placeholder="Escribe tu búsqueda" />
- <div class="contenedor"></div><div class="help-block with-errors"></div>
- </div>
-
-	</div>
+	<div  class="col-md-12">
+		<div class="form-group">
+		    <label>Título</label>
+		    <!-- <input type="text" name="title" class="form-control" id="title" placeholder="Escribe tu búsqueda" required data-error="Por favor busque el título." > -->
+		    <?php echo form_input($title);?>
+		    <input type="hidden" id="id_hist" name="id_hist" value="<?=$id_hist?>" >
+		 </div>
+		<!-- 		 <div class="form-group">
+				    <label>Description</label>
+				    <textarea name="description" class="form-control" placeholder="Description" style="width:500px;"></textarea>
+				 </div> -->
+	</div>	
 	
 	
 <div class="col-md-12 col-xs-12">

@@ -53,8 +53,8 @@ class Autor extends My_Controller {
     $this->data['portada_bg']='';
     $this->data['portada_sm']='';
     $this->data['teaser']='';
-    $this->data['audio']='';
-    $this->data['arrCath']='';
+    $this->data['audio']='';$this->data['tipop']='';
+    $this->data['arrCath']='';$this->data['muestraAvatar']='';$this->data['idAvatar']='';
     $this->form_validation->set_rules('estatus','Por favor seleccione el estatus', 'trim|required');
     $this->form_validation->set_rules('apellido_p','Por favor escriba el apellido paterno', 'trim|required');
     $this->form_validation->set_rules('nombre','Por favor escriba el nombre', 'trim|required');
@@ -85,7 +85,7 @@ class Autor extends My_Controller {
         'rows'        => '3',
         'cols'        => '3',
         'value' => $this->form_validation->set_value('minibio'),
-        'class' => 'form-control',
+        'class' => 'mceEditor form-control',
         'required'=>'',
         'data-error'=>'Por favor escriba la copy'        
       );
@@ -96,7 +96,7 @@ class Autor extends My_Controller {
         'rows'        => '3',
         'cols'        => '3',
         'value' => $this->form_validation->set_value('historia'),
-        'class' => 'form-control',
+        'class' => 'mceEditor form-control',
         'required'=>'',
         'data-error'=>'Por favor escriba la descripción'        
       );
@@ -124,6 +124,27 @@ class Autor extends My_Controller {
         'data-error'=>'Por favor escriba la fecha de inicio.',
         'autocomplete'=>"off"
       );
+/*Datos fiscales*/
+ $this->data['rfc'] = array('name'  => 'rfc', 'id'    => 'rfc', 'type'  => 'text', 'value' => $this->form_validation->set_value('rfc'), 'class' => 'form-control','autocomplete'=>"off");
+ $this->data['razons'] = array('name'  => 'razons', 'id'    => 'razons', 'type'  => 'text', 'value' => $this->form_validation->set_value('razons'), 'class' => 'form-control','autocomplete'=>"off");
+
+      $this->data['domiciliof'] = array(
+        'name'  => 'domiciliof',
+        'id'    => 'domiciliof',
+        'rows'        => '3',
+        'cols'        => '3',
+        'value' => $this->form_validation->set_value('domiciliof'),
+        'class' => 'form-control',
+      );
+ $this->data['cif'] = array('name'  => 'cif', 'id'    => 'cif', 'type'  => 'text', 'value' => $this->form_validation->set_value('cif'), 'class' => 'form-control','autocomplete'=>"off");
+/*datos bancarios*/
+$this->data['nombre_cuenta'] = array('name'  => 'nombre_cuenta', 'id'    => 'nombre_cuenta', 'type'  => 'text', 'value' => $this->form_validation->set_value('nombre_cuenta'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['num_cuenta'] = array('name'  => 'num_cuenta', 'id'    => 'num_cuenta', 'type'  => 'text', 'value' => $this->form_validation->set_value('num_cuenta'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['clabe'] = array('name'  => 'clabe', 'id'    => 'clabe', 'type'  => 'text', 'value' => $this->form_validation->set_value('clabe'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['num_tarjeta'] = array('name'  => 'num_tarjeta', 'id'    => 'num_tarjeta', 'type'  => 'text', 'value' => $this->form_validation->set_value('num_tarjeta'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['num_cliente'] = array('name'  => 'num_cliente', 'id'    => 'num_cliente', 'type'  => 'text', 'value' => $this->form_validation->set_value('num_cliente'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['sucursal'] = array('name'  => 'sucursal', 'id'    => 'sucursal', 'type'  => 'text', 'value' => $this->form_validation->set_value('sucursal'), 'class' => 'form-control','autocomplete'=>"off");
+
 
     $this->render('admin/autor_form', $this->data);
     }else{
@@ -152,12 +173,17 @@ class Autor extends My_Controller {
 
     $this->data['id_obj']=$rsHistoria->id_register;
     $this->data['estatusId']=$rsHistoria->estatus_register;
-    $this->data['portada_bg']=$rsHistoria->foto_register;
+    $this->data['portada_sm']=$rsHistoria->foto_register;
  $this->data['nacionalidadId']=$rsHistoria->id_pais;
     $this->data['estadosId']=$rsHistoria->id_estado;
     $this->data['pswd_act']=$rsHistoria->password_register;
-
+$this->data['muestraAvatar']=$rsHistoria->con_avatar_register;
+$this->data['idAvatar']=$rsHistoria->id_avatar;
   
+/*datos fiscales*/
+$this->data['tipop']='';
+/*datos bancarios*/
+
     $rscath=$this->panel_bd->getAutTopic($id);
     $arrCath=array();
     foreach ($rscath as $key => $cath) {
@@ -165,7 +191,6 @@ class Autor extends My_Controller {
        
      } 
      $this->data['arrCath']=$arrCath;
-      /*SELECT id_hist, titulo_hist, duracion_hist, copy_hist, historia, portada_bg, portada_sm, teaser_audio, archivo_audio, duracion_audio, id_estatus_hist, id_register, id_tiempo, id_serie, hashtag_hist, fecha_inicio_hist, fecha_fin_hist, fecha_captura_hist, fecha_publicacion_hist, usuario_publica_hist, fecha_terminacion_contrato_hist, usuario_terminacion_hist FROM ips_historias WHERE 1*/
     
     $this->form_validation->set_rules('estatus','Por favor seleccione el estatus', 'trim|required');
     $this->form_validation->set_rules('apellido_p','Por favor escriba el apellido paterno', 'trim|required');
@@ -177,8 +202,6 @@ class Autor extends My_Controller {
      {
 
       $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-
-/*stdClass Object ( [id_register] => 1 [email_register] => rulfo@gmail.com [password_register] => 140ce6821a452074e68eca62878d2702 [ap_paterno_register] => Juan [ap_materno_register] => Ramirez [nombre_register] => [fch_nacimiento_register] => 2019-01-09 [genero_register] => 2 [pseudonimo_register] => jairulf [con_avatar_register] => 1 [id_avatar] => [foto_register] => perros3 (1).jpg [estatus_register] => 0 [es_lector_register] => 0 [es_autor_register] => 1 [id_pais] => 10 [nacionalidad] => MARFILEÑA [id_estado] => 10 [entidad] => DURANGO [id_ciudad] => 282 [minibio_register] => fgjfhfgfsdfd [semblanza_register] => asfasfasfasf [numero_contrato_register] => 3444 [comentarios_register] => [fecha_alta] => 2019-01-10 05:44:21 [usuario_alta] => 1 [fecha_modifica] => [usuario_modifica] => )*/
 
    $this->data['num_contrato'] = array('name'  => 'num_contrato', 'id'    => 'num_contrato', 'type'  => 'text', 'value' => ($this->form_validation->set_value('num_contrato', $rsHistoria->numero_contrato_register)) ? $this->form_validation->set_value('num_contrato', $rsHistoria->numero_contrato_register) : $this->form_validation->set_value('num_contrato'),
     'class' => 'form-control');
@@ -212,7 +235,7 @@ class Autor extends My_Controller {
         'rows'        => '3',
         'cols'        => '3',
         'value' => ($this->form_validation->set_value('minibio', $rsHistoria->minibio_register)) ? $this->form_validation->set_value('minibio', $rsHistoria->minibio_register) : $this->form_validation->set_value('minibio'),
-        'class' => 'form-control',
+        'class' => 'mceEditor form-control',
         'required'=>'',
         'data-error'=>'Por favor escriba la copy'        
       );
@@ -224,7 +247,7 @@ class Autor extends My_Controller {
         'rows'        => '3',
         'cols'        => '3',
         'value' => ($this->form_validation->set_value('historia', $rsHistoria->semblanza_register)) ? $this->form_validation->set_value('historia', $rsHistoria->semblanza_register) : $this->form_validation->set_value('historia'),
-        'class' => 'form-control',
+        'class' => 'mceEditor form-control',
         'required'=>'',
         'data-error'=>'Por favor escriba la descripción'        
       );
@@ -240,6 +263,31 @@ class Autor extends My_Controller {
         'data-error'=>'Por favor escriba la fecha de nacimiento.',
         'autocomplete'=>"off"
       );
+
+
+/*Datos fiscales*/
+ $this->data['rfc'] = array('name'  => 'rfc', 'id'    => 'rfc', 'type'  => 'text', 'value' => $this->form_validation->set_value('rfc'), 'class' => 'form-control','autocomplete'=>"off");
+ $this->data['razons'] = array('name'  => 'razons', 'id'    => 'razons', 'type'  => 'text', 'value' => $this->form_validation->set_value('razons'), 'class' => 'form-control','autocomplete'=>"off");
+
+      $this->data['domiciliof'] = array(
+        'name'  => 'domiciliof',
+        'id'    => 'domiciliof',
+        'rows'        => '3',
+        'cols'        => '3',
+        'value' => $this->form_validation->set_value('domiciliof'),
+        'class' => 'form-control',
+      );
+ $this->data['cif'] = array('name'  => 'cif', 'id'    => 'cif', 'type'  => 'text', 'value' => $this->form_validation->set_value('cif'), 'class' => 'form-control','autocomplete'=>"off");
+/*datos bancarios*/
+$this->data['nombre_cuenta'] = array('name'  => 'nombre_cuenta', 'id'    => 'nombre_cuenta', 'type'  => 'text', 'value' => $this->form_validation->set_value('nombre_cuenta'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['num_cuenta'] = array('name'  => 'num_cuenta', 'id'    => 'num_cuenta', 'type'  => 'text', 'value' => $this->form_validation->set_value('num_cuenta'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['clabe'] = array('name'  => 'clabe', 'id'    => 'clabe', 'type'  => 'text', 'value' => $this->form_validation->set_value('clabe'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['num_tarjeta'] = array('name'  => 'num_tarjeta', 'id'    => 'num_tarjeta', 'type'  => 'text', 'value' => $this->form_validation->set_value('num_tarjeta'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['num_cliente'] = array('name'  => 'num_cliente', 'id'    => 'num_cliente', 'type'  => 'text', 'value' => $this->form_validation->set_value('num_cliente'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['sucursal'] = array('name'  => 'sucursal', 'id'    => 'sucursal', 'type'  => 'text', 'value' => $this->form_validation->set_value('sucursal'), 'class' => 'form-control','autocomplete'=>"off");
+
+
+
 
     $this->render('admin/autor_form', $this->data);
     }else{

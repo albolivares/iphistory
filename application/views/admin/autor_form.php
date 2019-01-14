@@ -109,13 +109,13 @@
 
 <div class="col-md-6 col-sm-12 col-xs-12" >
 	<label for="avatar">¿Mostrar avatar?:</label><br/>
-	<input type="radio" name="avatar" value="1" id="id_avatar1">&nbsp;Sí&nbsp;&nbsp;<input type="radio" name="avatar" value="2" id="id_avatar2">&nbsp;No, quiero mi foto(300x300px)<br/><br/>
+	<input type="radio" name="avatar" value="1" id="id_avatar1" <?=($muestraAvatar=='1')? "checked='checked'":""; ?>>&nbsp;Sí&nbsp;&nbsp;<input type="radio" name="avatar" value="2" id="id_avatar2" <?=($muestraAvatar=='2')? "checked='checked'":""; ?>>&nbsp;No, quiero mi foto(300x300px)<br/><br/>
 	<div class="help-block with-errors"></div>
 
-<div class="cc-selector" id="contAva">
+<div class="cc-selector" id="contAva" <?=($muestraAvatar=='2' || $muestraAvatar=='' || $muestraAvatar=='0')? " style=' display:none;' ":""; ?> >
 
 	<?php foreach($rsAvatars as $avatar) { ?> 
-        <input id="<?=$avatar->id_avatar?>" type="radio" name="avatar_sel" value="<?=$avatar->id_avatar?>" />
+        <input id="<?=$avatar->id_avatar?>" <?=($idAvatar==$avatar->id_avatar)? "checked='checked'":""; ?> type="radio" name="avatar_sel" value="<?=$avatar->id_avatar?>" />
         <label class="drinkcard-cc" style="background-image:url(<?=base_url().$avatar->imagen_avatar?>);" for="<?=$avatar->id_avatar?>"></label>
     <?php }?>    
         
@@ -125,7 +125,7 @@
 	</div>
 
 
-	<div class="col-md-6  col-sm-12 col-xs-12" id="contUp">
+	<div class="col-md-6  col-sm-12 col-xs-12" id="contUp" <?=($muestraAvatar=='1' || $muestraAvatar=='' || $muestraAvatar=='0')? " style=' display:none;' ":""; ?> >
      <div class="form-group">                 
 	    <span class="fileinput-button button " tabindex="6">        
 	        <span><i class="glyphicon glyphicon-camera" aria-hidden="true"></i>
@@ -176,10 +176,97 @@
 	</select>
 	</div>
 	<div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
-	           
+	<h2>Agregar RFC</h2>
+
+	<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="tipo">Tipo persona:</label>
+		<input id="tipop1" name="tipo_persona" type="radio" class="" <?php if($tipop=='0') echo "checked='checked'"; ?> value="0" <?php echo $this->form_validation->set_radio('tipop', 0); ?> />
+        <label for="permanente" class="">Física</label>
+        <input id="tipop2" name="tipo_persona" type="radio" class="" <?php if($tipop=='1') echo "checked='checked'"; ?> value="1" <?php echo $this->form_validation->set_radio('tipop', 1); ?> />
+        <label for="permanente" class="">Moral</label>
+	</div>
+	</div>
+
+
+	<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="rfc">RFC:</label>
+	<?php echo form_input($rfc);?><div class="help-block with-errors"></div>	
+	</div>
+	</div>
+
+	<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="razons">Razón social:</label>
+	<?php echo form_input($razons);?><div class="help-block with-errors"></div>	
+	</div>
+	</div>
+
+	<div class="col-md-6 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="domiciliof">Domicilio fiscal:</label>
+	<?php echo form_textarea($domiciliof);?><div class="help-block with-errors"></div>	
+	</div>
+	</div>
+
+
+	<div class="col-md-6 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="CIF">CIF:</label>
+	<div class="help-block with-errors"></div>	
+	</div>
+	</div>
+
     </div>
     <div role="tabpanel" class="tab-pane fade" id="tab_content5" aria-labelledby="banc-tab">
-	           
+	<h2>Cuenta bancaria</h2>
+<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="nombre_cuenta">Nombre titular:</label>
+	<?php echo form_input($nombre_cuenta);?><div class="help-block with-errors"></div>	
+	</div>
+	</div>
+	<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="nombre_cuenta">Num. cuenta:</label>
+	<?php echo form_input($num_cuenta);?><div class="help-block with-errors"></div>	
+	</div>
+	</div>
+	<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="clabe">CLABE:</label>
+	<?php echo form_input($clabe);?><div class="help-block with-errors"></div>	
+	</div>
+	</div>
+	<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="num_tarjeta">Num. tarjeta:</label>
+	<?php echo form_input($num_tarjeta);?><div class="help-block with-errors"></div>	
+	</div>
+	</div>
+		<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="num_cliente">Num. cliente:</label>
+	<?php echo form_input($num_cliente);?><div class="help-block with-errors"></div>	
+	</div>
+	</div>
+
+	<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="banco">Banco:</label>
+	<div class="help-block with-errors"></div>	
+	</div>
+	</div>
+
+
+	<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="form-group"><br/>
+	<label for="sucursal">Sucursal:</label>
+	<?php echo form_input($sucursal);?><div class="help-block with-errors"></div>	
+	</div>
+	</div>
+
     </div>
    </div>
 

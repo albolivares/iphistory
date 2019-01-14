@@ -1,6 +1,6 @@
 <div class="left_col scroll-view">
-  <div class="navbar nav_title" style="border: 0;">
-    <a href="<?=base_url()?>" class="site_title"><img src="<?=base_url()?>images/logo-top.png"  alt="logo" /><br/></a>
+  <div class="navbar nav_title" style="border: 0; text-align:center;">
+    <a href="<?=base_url()?>" class="site_title"><img src="<?=base_url()?>images/ipstori-logo-bco.png"  alt="logo" style="height:85%;" /><br/></a>
   </div>
 
   <div class="clearfix"></div>
@@ -33,6 +33,9 @@
         <li><a href="<?=base_url()?>admin/historia"><i class="glyphicon glyphicon-comment"></i>&nbsp;&nbsp;Historias</a></li>
         <li><a href="<?=base_url()?>admin/serie"><i class="glyphicon glyphicon-comment"></i>&nbsp;&nbsp;Series</a></li>
         <li><a href="<?=base_url()?>admin/readlist"><i class="glyphicon glyphicon-comment"></i>&nbsp;&nbsp;Readlist</a></li>
+        <li><a href="<?=base_url()?>admin/autor"><i class="glyphicon glyphicon-comment"></i>&nbsp;&nbsp;Autores</a></li>
+        <li><a href="<?=base_url()?>admin/recomendacion"><i class="glyphicon glyphicon-comment"></i>&nbsp;&nbsp;Recomendaciones</a></li>
+        <li><a href="<?=base_url()?>admin/suscripcion"><i class="glyphicon glyphicon-comment"></i>&nbsp;&nbsp;Suscripciones</a></li>
 
 <!--         <li><a><i class="fa fa-edit"></i> Proyectos <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">    
