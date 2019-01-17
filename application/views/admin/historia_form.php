@@ -46,6 +46,19 @@
 	<label for="titulo_hist">Título:</label>
 	<?php echo form_input($titulo_hist);?><div class="help-block with-errors"></div>
 	</div>
+
+
+
+	<div class="col-md-9 col-sm-10 col-xs-10">
+	<label for="autor">Autor:</label>
+	<?php echo form_input($autor);?><div class="help-block with-errors"></div>
+	</div>
+
+<div class="col-md-3 col-sm-10 col-xs-10">
+	<br/><a href="#" id="btn_preview" class="btn btn-default">Buscar</a><input type="hidden" id="id_register" name="id_register" value="<?=$registerId?>"><div class="loading" style="display: none;"><div class="content"><img src="<?php echo base_url().'assets/img/load.gif'; ?>"/></div></div>
+	</div>
+
+
 	<div class="col-md-12 col-sm-6 col-xs-12">
 	<label for="id_serie">Serie:</label>
 	<select id="id_serie" name="id_serie"  class="form-control">

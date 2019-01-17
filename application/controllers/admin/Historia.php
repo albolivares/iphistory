@@ -44,15 +44,18 @@ class Historia extends My_Controller {
     $this->data['estatusId']='0';
     $this->data['duracionId']='';
     $this->data['serieId']='';
+    $this->data['registerId']='';
 
     $this->data['portada_bg']='';
     $this->data['portada_sm']='';
     $this->data['teaser']='';
     $this->data['audio']='';
     $this->data['arrCath']='';
-    $this->form_validation->set_rules('estatus','Por favor seleccione el estatus', 'trim|required');
-    $this->form_validation->set_rules('titulo_hist','Por favor escriba el título', 'trim|required');
-    $this->form_validation->set_rules('historia','Por favor escriba la historia', 'trim|required');
+    $this->form_validation->set_rules('estatus','Estatus', 'trim|required');
+    $this->form_validation->set_rules('titulo_hist','Título', 'trim|required');
+    $this->form_validation->set_rules('historia','Historía', 'trim|required');
+    $this->form_validation->set_rules('id_register','Autor', 'trim|required');
+    
     
       if ($this->form_validation->run() === FALSE)
      {
@@ -61,6 +64,7 @@ class Historia extends My_Controller {
 
       $this->data['titulo_hist'] = array('name'  => 'titulo_hist', 'id'    => 'titulo_hist', 'type'  => 'text', 'value' => $this->form_validation->set_value('titulo_hist'), 'class' => 'form-control', 'required'=>'',
         'data-error'=>'Por favor escriba el título');
+$this->data['autor'] = array('name'  => 'autor', 'id'    => 'autor', 'type'  => 'text', 'value' => $this->form_validation->set_value('autor'), 'class' => 'form-control', 'readonly'=>'true');
 
  $this->data['hashtag_hist'] = array('name'  => 'hashtag_hist', 'id'    => 'hashtag_hist', 'type'  => 'text', 'value' => $this->form_validation->set_value('hashtag_hist'), 'class' => 'form-control');
 
@@ -140,6 +144,9 @@ class Historia extends My_Controller {
     $this->data['portada_sm']=$rsHistoria->portada_sm;
     $this->data['teaser']=$rsHistoria->teaser_audio;
     $this->data['audio']=$rsHistoria->archivo_audio;
+$this->data['registerId']=$rsHistoria->id_register;
+$nom_register=$rsHistoria->nombre_register.' '.$rsHistoria->ap_paterno_register.' ('.$rsHistoria->pseudonimo_register.')';
+
     $rscath=$this->panel_bd->getHistCategoria($id);
     $arrCath=array();
     foreach ($rscath as $key => $cath) {
@@ -165,6 +172,10 @@ class Historia extends My_Controller {
         'data-error'=>'Por favor escriba el título');
 
  $this->data['hashtag_hist'] = array('name'  => 'hashtag_hist', 'id'    => 'hashtag_hist', 'type'  => 'text', 'value' => ($this->form_validation->set_value('hashtag_hist', $rsHistoria->hashtag_hist)) ? $this->form_validation->set_value('hashtag_hist', $rsHistoria->hashtag_hist) : $this->form_validation->set_value('hashtag_hist'), 'class' => 'form-control');
+
+ $this->data['autor'] = array('name'  => 'autor', 'id'    => 'autor', 'type'  => 'text', 
+  'value' => ($this->form_validation->set_value('autor', $nom_register)) ? $this->form_validation->set_value('autor', $nom_register) : $this->form_validation->set_value('autor'), 
+  'class' => 'form-control', 'readonly'=>'true');
 
       $this->data['copy_hist'] = array(
         'name'  => 'copy_hist',

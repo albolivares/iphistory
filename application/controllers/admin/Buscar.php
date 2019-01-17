@@ -87,5 +87,49 @@ class Buscar extends CI_Controller {
     }
 
 
+function ajaxPaginationDataAut(){
+        $conditions = array();
+        
+        //calc offset number
+        $page = $this->input->post('page');
+        if(!$page){
+            $offset = 0;
+        }else{
+            $offset = $page;
+        }
+        
+        //set conditions for search
+        $keywords = $this->input->post('keywords');
+        $sortBy = $this->input->post('sortBy');
+        if(!empty($keywords)){
+            $conditions['search']['keywords'] = $keywords;
+        }
+        if(!empty($sortBy)){
+            $conditions['search']['sortBy'] = $sortBy;
+        }
+        
+        //total rows count
+        $totalRec = count($this->post->getRowsAut($conditions));
+        
+        //pagination configuration
+        $config['target']      = '#postList';
+        $config['base_url']    = base_url().'posts/ajaxPaginationDataAut';
+        $config['total_rows']  = $totalRec;
+        $config['per_page']    = $this->perPage;
+        $config['link_func']   = 'searchFilter';
+        $this->ajax_pagination->initialize($config);
+        
+        //set start and limit
+        $conditions['start'] = $offset;
+        $conditions['limit'] = $this->perPage;
+        
+        //get posts data
+        $data['posts'] = $this->post->getRowsAut($conditions);
+        
+        //load the view
+        $this->load->view('admin/ajax_busc_aut', $data, false);
+    }
+
+
 
 }

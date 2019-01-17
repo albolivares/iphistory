@@ -275,3 +275,93 @@ $(document).ready(function(){
 
 
 $('#categoria').multiSelect();
+
+
+
+
+/*funciones para el buscador*/
+
+ $( function() {
+    var tag, dialog, form ,
+       id_p = $( "#id_p" ), 
+      nombre = $( "#nombre" );
+
+  function addUser() {
+    
+      var valid = true;
+      if ( valid ) {
+         var searchIDs = $('input:checked').map(function(){
+      //return $(this).val();    
+      console.log($(this).val());
+      if($(this).val()>0) {
+        val_c= $(this).val();
+        $( "#id_register").val($("#hist_"+val_c).val());
+        $( "#autor").val($("#thist_"+val_c).val());
+        /*$( "#datatable-responsive tbody" ).append( "<tr>" +
+          "<td>" + $("#hist_"+val_c).val() + "</td>" +
+          "<td>" + $("#thist_"+val_c).val() + "</td>" +
+          "<td><button type=\"button\"  class=\"removebutton\" title=\"Eliminar\">X</button></td><input type=\"hidden\" name=\"val_hist[]\" id=\"val_hist_" + $("#hist_"+val_c).val() + "\" value=\"" + $("#hist_"+val_c).val() + "\" /></td>" +"</tr>" );
+     */   }
+    });
+
+              //dialog.dialog( "close" );
+
+      }
+      return valid;
+    }
+ 
+
+
+
+
+    $("#btn_preview").click(function(e){
+        e.preventDefault();
+        var name='';
+        var message='';
+        var tag = $("<div></div>");
+        var base_url1 = $('#base_url').val();
+        $(tag).attr("title", "Buscar autor");
+        $.ajax({
+            type: "POST",
+            data: {message: message, name: name},
+            url: base_url1 + 'admin/buscar/ajaxPaginationDataAut',//Important: base_url is defined in the header section
+            success:function(result){
+                $(tag).dialog({
+                    autoOpen: false,
+                     buttons: {
+                        "Seleccionar": addUser,
+                        Cancel: function() {
+                            tag.dialog( "close" );
+                            }
+                        },
+                    close: function() {
+                        //form[ 0 ].reset();
+                        tag.dialog( "close" );
+                    },
+                        show: {
+                            effect: "blind",
+                            duration: 1000
+                        },
+                        hide: {
+                            effect: "explode",
+                            duration: 1000
+                        }
+                    });
+
+                 form = tag.find( "form" ).on( "submit", function( event ) {
+                  event.preventDefault();
+                  addUser();
+                  tag.dialog( "close" );
+                });
+                $(tag).dialog( "option", "width", 480 );
+                $(tag).html(result).dialog().dialog('open');
+            }
+        });
+    });
+});
+
+ $(document).on('click','button.removebutton', function() {
+    alert("Eliminar autor");
+  $(this).closest('tr').remove();
+  return false;
+});

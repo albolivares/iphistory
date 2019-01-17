@@ -9,11 +9,14 @@ class Panel_model extends CI_Model
 
 public function getHistorias($id=false)
 {
-
+/*SELECT id_hist, titulo_hist, duracion_hist, copy_hist, historia, portada_bg, portada_sm, teaser_audio, archivo_audio, duracion_audio, id_estatus_hist, h.id_register, id_tiempo, id_serie, hashtag_hist, fecha_inicio_hist, fecha_fin_hist, fecha_captura_hist, fecha_publicacion_hist, usuario_publica_hist, id_modifica_register, fch_modifica_register, id_elimina_register, fch_elimina_register, fecha_terminacion_contrato_hist, usuario_terminacion_hist,ap_paterno_register, nombre_register, pseudonimo_register FROM ips_historias h LEFT JOIN ips_register r on r.id_register=h.id_register WHERE 1 */
+	$query = $this->db->select('id_hist, titulo_hist, duracion_hist, copy_hist, historia, portada_bg, portada_sm, teaser_audio, archivo_audio, duracion_audio, id_estatus_hist, h.id_register, id_tiempo, id_serie, hashtag_hist, fecha_inicio_hist, fecha_fin_hist, fecha_captura_hist, fecha_publicacion_hist, usuario_publica_hist, id_modifica_register, fch_modifica_register, id_elimina_register, fch_elimina_register, fecha_terminacion_contrato_hist, usuario_terminacion_hist,ap_paterno_register, nombre_register, pseudonimo_register');
 	if(is_numeric($id)) {
 		$query = $this->db->where('id_hist', $id);			
 	}
-	$query = $this->db->get('ips_historias');
+	$query = $this->db->join('ips_register r','r.id_register=h.id_register' ,'LEFT');
+	$query = $this->db->get('ips_historias h');
+
 	return $query->result();
 }
 
@@ -35,7 +38,8 @@ public function setHistoria(){
 	'duracion_audio' => $this->input->post('duracion_audio'),  
 	'id_estatus_hist' => $this->input->post('estatus'),
 	'id_serie' => $this->input->post('id_serie'),	
-	'id_register' => $this->session->userdata('user_id'),
+	'id_register' => $this->input->post('id_register'),
+	'usuario_publica_hist' => $this->session->userdata('user_id'),
 	'fecha_captura_hist' => date('Y-m-d H:i:s')
     ); 
 
@@ -82,7 +86,8 @@ public function updateHistoria(){
 	'archivo_audio' => $this->input->post('archivo_audio'),
 	'duracion_audio' => $this->input->post('duracion_audio'),  
 	'id_estatus_hist' => $this->input->post('estatus'),
-	'id_serie' => $this->input->post('id_serie')
+	'id_serie' => $this->input->post('id_serie'),
+	'id_register' => $this->input->post('id_register')
     ); 
 
    if(is_numeric($this->input->post('id_obj') ) ){
@@ -319,7 +324,6 @@ public function getReadListHist($id){
 }
 
 function getRows($params = array()){
-/*SELECT id_hist, titulo_hist, duracion_hist, copy_hist, historia, portada_bg, portada_sm, teaser_audio, archivo_audio, duracion_audio, id_estatus_hist, id_register, id_tiempo, id_serie, hashtag_hist, fecha_inicio_hist, fecha_fin_hist, fecha_captura_hist, fecha_publicacion_hist, usuario_publica_hist, id_modifica_register, fch_modifica_register, id_elimina_register, fch_elimina_register, fecha_terminacion_contrato_hist, usuario_terminacion_hist FROM ips_historias WHERE 1*/
 
 	$this->db->select(' id_hist, titulo_hist, duracion_hist' );
 	$this->db->from('ips_historias');
@@ -348,7 +352,47 @@ function getRows($params = array()){
         return ($query->num_rows() > 0)?$query->result_array():FALSE;
     }
 
+function getRowsAut($params = array()){
+
+/*id_register, email_register, password_register, ap_paterno_register, ap_materno_register, nombre_register, fch_nacimiento_register, genero_register, pseudonimo_register, con_avatar_register, id_avatar, foto_register, estatus_register, es_lector_register, es_autor_register, id_pais, p.nacionalidad, id_estado, e.entidad, id_ciudad, minibio_register, semblanza_register, numero_contrato_register, comentarios_register, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica*/
+
+	$this->db->select(' id_register, ap_paterno_register, nombre_register, pseudonimo_register' );
+	$this->db->from('ips_register');
+	$this->db->where('es_autor_register', 1);
+	$this->db->where('estatus_register', 1);
+        //filter data by searched keywords
+        if(!empty($params['search']['keywords'])){
+            //$this->db->like('ap_paterno_register',$params['search']['keywords']);
+			$this->db->where("WHERE MATCH (`nombre_register`, `ap_paterno_register`) AGAINST ('".$params['search']['keywords']."' IN BOOLEAN MODE)
+OR `pseudonimo_register` LIKE '%".$params['search']['keywords']."%' OR `prod_sku` LIKE '%silk%'
+OR `email_register` LIKE '%".$params['search']['keywords']."%'
+OR `ap_materno_register` LIKE '%".$params['search']['keywords']."%';", NULL, FALSE);
+
+        }
+        //sort data by ascending or desceding order
+        if(!empty($params['search']['sortBy'])){
+            $this->db->order_by('nombre_register',$params['search']['sortBy']);
+        }else{
+            $this->db->order_by('id_register','desc');
+        }
+        //set start and limit
+        if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit'],$params['start']);
+        }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+            $this->db->limit($params['limit']);
+        }
+        //get records
+        $query = $this->db->get();
+
+        //print_r($this->db->last_query());
+        //return fetched data
+        return ($query->num_rows() > 0)?$query->result_array():FALSE;
+    }
+
+
 /*Registro de autores*/
+
+
 
 
 public function getPaises(){

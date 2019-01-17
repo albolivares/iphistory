@@ -32,8 +32,9 @@
                         if($rsHistorias){
                         foreach ($rsHistorias as $index => $value) { ?>
                           <tr>
+                          
                             <td><?=$value->titulo_hist?></td>
-                            <td><?=$value->usuario_publica_hist?></td>
+                            <td><?=$value->nombre_register.' '.$value->ap_paterno_register.' ('.$value->pseudonimo_register.')'?></td>
                             <td></td>
                             <td><?=$value->fecha_captura_hist?></td>
                             <td><?=$value->fecha_publicacion_hist?></td>
