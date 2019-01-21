@@ -10,7 +10,7 @@ class Panel_model extends CI_Model
 public function getHistorias($id=false)
 {
 /*SELECT id_hist, titulo_hist, duracion_hist, copy_hist, historia, portada_bg, portada_sm, teaser_audio, archivo_audio, duracion_audio, id_estatus_hist, h.id_register, id_tiempo, id_serie, hashtag_hist, fecha_inicio_hist, fecha_fin_hist, fecha_captura_hist, fecha_publicacion_hist, usuario_publica_hist, id_modifica_register, fch_modifica_register, id_elimina_register, fch_elimina_register, fecha_terminacion_contrato_hist, usuario_terminacion_hist,ap_paterno_register, nombre_register, pseudonimo_register FROM ips_historias h LEFT JOIN ips_register r on r.id_register=h.id_register WHERE 1 */
-	$query = $this->db->select('id_hist, titulo_hist, duracion_hist, copy_hist, historia, portada_bg, portada_sm, teaser_audio, archivo_audio, duracion_audio, id_estatus_hist, h.id_register, id_tiempo, id_serie, hashtag_hist, fecha_inicio_hist, fecha_fin_hist, fecha_captura_hist, fecha_publicacion_hist, usuario_publica_hist, id_modifica_register, fch_modifica_register, id_elimina_register, fch_elimina_register, fecha_terminacion_contrato_hist, usuario_terminacion_hist,ap_paterno_register, nombre_register, pseudonimo_register');
+	$query = $this->db->select('id_hist, titulo_hist, duracion_hist, copy_hist, historia, portada_bg, portada_sm, portada_fb, portada_tw, teaser_audio, archivo_audio, duracion_audio, id_estatus_hist, h.id_register, id_tiempo, id_serie, hashtag_hist, fecha_inicio_hist, fecha_fin_hist, fecha_captura_hist, fecha_publicacion_hist, usuario_publica_hist, id_modifica_register, fch_modifica_register, id_elimina_register, fch_elimina_register, fecha_terminacion_contrato_hist, usuario_terminacion_hist,ap_paterno_register, nombre_register, pseudonimo_register');
 	if(is_numeric($id)) {
 		$query = $this->db->where('id_hist', $id);			
 	}
@@ -33,6 +33,8 @@ public function setHistoria(){
 	'historia' => $this->input->post('historia'),
 	'portada_bg' => $this->input->post('portada_bg'),
 	'portada_sm' => $this->input->post('portada_sm'),
+	'portada_fb' => $this->input->post('portada_fb'),
+	'portada_tw' => $this->input->post('portada_tw'),
 	'teaser_audio' => $this->input->post('teaser_audio'), 
 	'archivo_audio' => $this->input->post('archivo_audio'),
 	'duracion_audio' => $this->input->post('duracion_audio'),  
@@ -82,6 +84,8 @@ public function updateHistoria(){
 	'historia' => $this->input->post('historia'),
 	'portada_bg' => $this->input->post('portada_bg'),
 	'portada_sm' => $this->input->post('portada_sm'),
+	'portada_fb' => $this->input->post('portada_fb'),
+	'portada_tw' => $this->input->post('portada_tw'),
 	'teaser_audio' => $this->input->post('teaser_audio'), 
 	'archivo_audio' => $this->input->post('archivo_audio'),
 	'duracion_audio' => $this->input->post('duracion_audio'),  
@@ -363,10 +367,8 @@ function getRowsAut($params = array()){
         //filter data by searched keywords
         if(!empty($params['search']['keywords'])){
             //$this->db->like('ap_paterno_register',$params['search']['keywords']);
-			$this->db->where("WHERE MATCH (`nombre_register`, `ap_paterno_register`) AGAINST ('".$params['search']['keywords']."' IN BOOLEAN MODE)
-OR `pseudonimo_register` LIKE '%".$params['search']['keywords']."%' OR `prod_sku` LIKE '%silk%'
-OR `email_register` LIKE '%".$params['search']['keywords']."%'
-OR `ap_materno_register` LIKE '%".$params['search']['keywords']."%';", NULL, FALSE);
+			$this->db->where(" (nombre_register LIKE '%".$params['search']['keywords']."%' OR ap_paterno_register LIKE '%".$params['search']['keywords']."%'
+OR pseudonimo_register LIKE '%".$params['search']['keywords']."%' OR email_register LIKE '%".$params['search']['keywords']."%' OR ap_materno_register LIKE '%".$params['search']['keywords']."%' )", NULL, FALSE);
 
         }
         //sort data by ascending or desceding order
@@ -407,6 +409,7 @@ public function getNacionalidad(){
 	/*SELECT `id`, `codigo_pais`, `nacionalidad`, `cve_nacionalidad` FROM `ips_nacionalidades` WHERE 1*/
 $this->db->select('id, nacionalidad');
 	$this->db->from('ips_nacionalidades p');
+$this->db->order_by('nacionalidad');
 	$query=$this->db->get();
 	return ($query->num_rows() > 0)?$query->result():FALSE;
 }
@@ -531,7 +534,7 @@ $datab = array(
 	'numero_tarjeta_banco' => $this->input->post('num_tarjeta'), 
 	'sucursal_banco' => $this->input->post('sucursal'), 
 	'numero_cliente_banco' => $this->input->post('num_cliente'), 
-	'id_banco' => '', 
+	'id_banco' => $this->input->post('banco'), 
 	'id_register' => $id_comp,	
 	'usuario_alta' => $this->session->userdata('user_id'),
 	'fecha_alta' => date('Y-m-d H:i:s')
@@ -626,6 +629,8 @@ public function updateAutor(){/*INSERT INTO `ips_register`(`id_register`, `email
 
 /*datos fiscales*/
 		/*SELECT id_fiscal, id_tipo_persona, rfc_fiscal, razon_social, domiclio_fiscal, cif_archivo, id_register, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica FROM ips_fiscal WHERE 1*/
+
+
 $this->db->where('id_register', $id_comp); $this->db->delete('ips_fiscal');
 $dataf = array(
 	'id_tipo_persona' => $this->input->post('tipo_persona'), 
@@ -637,10 +642,10 @@ $dataf = array(
 	'usuario_alta' => $this->session->userdata('user_id'),
 	'fecha_alta' => date('Y-m-d H:i:s')
     ); 
-if($this->input->post('tipo_persona')){
+
    $insertcomp=$this->db->insert('ips_fiscal', $dataf); 
    $id_compf=$this->db->insert_id();
-}
+
 
 		/*datos bancarios*/
 
@@ -653,7 +658,7 @@ $datab = array(
 	'numero_tarjeta_banco' => $this->input->post('num_tarjeta'), 
 	'sucursal_banco' => $this->input->post('sucursal'), 
 	'numero_cliente_banco' => $this->input->post('num_cliente'), 
-	'id_banco' => '', 
+	'id_banco' => $this->input->post('banco'), 
 	'id_register' => $id_comp,	
 	'usuario_alta' => $this->session->userdata('user_id'),
 	'fecha_alta' => date('Y-m-d H:i:s')
@@ -665,6 +670,29 @@ $datab = array(
 
 	}
    return $id_comp;
+}
+
+public function getDatosFiscales($id){
+	$query = $this->db->select('id_fiscal, id_tipo_persona, rfc_fiscal, razon_social, domiclio_fiscal, cif_archivo, id_register, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica');			
+	$query = $this->db->where('id_register', $id);			
+	$query = $this->db->get('ips_fiscal');
+	return $query->result();
+
+
+}
+
+public function getDatosBanc($id){
+	
+		$query = $this->db->select('id_dato_bancario, nombre_titular_banco, cuenta_banco, clabe_banco, numero_tarjeta_banco, id_register, id_banco, sucursal_banco, numero_cliente_banco, fecha_alta, usuario_alta, fecha_modifica, usuario_modifica');			
+	$query = $this->db->where('id_register', $id);			
+	$query = $this->db->get('ips_datos_bancarios');
+	return $query->result();
+}
+
+public function getBancos(){
+	$query = $this->db->select('id_banco, banco');					
+	$query = $this->db->get('ips_bancos');
+	return $query->result();
 }
 
 public	function getAutTopic($id){

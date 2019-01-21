@@ -10,7 +10,7 @@ $( function() {
     changeMonth: true,
 
     changeYear: true,
-
+yearRange: "1920:2019",
 
     dateFormat: "yy-mm-dd",
 

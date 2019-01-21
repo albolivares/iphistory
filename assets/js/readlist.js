@@ -206,7 +206,7 @@ $(function () {
         $.ajax({
             type: "POST",
             data: {message: message, name: name},
-            url: base_url1 + 'admin/buscar/ajaxPaginationData',//Important: base_url is defined in the header section
+            url: base_url1 + 'admin/buscar/historias',//Important: base_url is defined in the header section
             success:function(result){
                 $(tag).dialog({
                     autoOpen: false,

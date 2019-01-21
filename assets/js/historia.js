@@ -257,19 +257,97 @@ $(function () {
 
 
 
-$(document).ready(function(){  
-    tinymce.init({
-      selector: '#historia',
-      height: 300,
-      menubar: false,
-      plugins: [
-        'advlist autolink lists link image charmap print preview anchor textcolor',
-        'searchreplace visualblocks code fullscreen',
-        'insertdatetime media table contextmenu paste code help wordcount'
-      ],
-      toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-      
-    });
+/**thumbtw**/
+$(function () {
+    'use strict';
+    var base_url1 = $('#base_url').val();    
+    // Change this to the location of your server-side upload handler:
+    var url = window.location.hostname === 'blueimp.github.io' ?
+                base_url1 : base_url1+'admin/historia/procesar/';
+    $('#fileuploadfe_tw').fileupload({
+        formData: {
+                 carpeta: 'redes'               
+          },        
+        url: url,
+        add: function(e, data) {
+        var uploadErrors = [];
+        var ext = data.originalFiles[0].name.split('.').pop().toLowerCase();
+        if($.inArray(ext, ['gif','png','jpeg','jpg']) == -1) {
+            uploadErrors.push('No es un tipo de archivo valido');
+        }
+        if(data.originalFiles[0].size > (1*1024*1024)) {//2 MB
+            uploadErrors.push('El tamaño del archivo es demasiado grande solo se permiten 1 MB como maximo');
+        }
+        if(uploadErrors.length > 0) {
+            alert(uploadErrors.join("\n"));
+        } else {
+            data.submit();
+         }
+    }, 
+        dataType: 'json',        
+        done: function (e, data) {
+            $.each(data.result.files, function (index, file) {
+                console.log(file.name);
+                $('<li/>').html('<img style="width:240px; height:180px;" src="'+base_url1+'uploads/images/redes/'+file.name+'" />'+'<input type="hidden" name="portada_tw" id="portada_tw" value="'+file.name+'" />').appendTo('#filesfe_tw ul');
+                //$('<p/>').html('<input type="hidden" name="ruta[]" id="ruta" value="'+file.name+' />').appendTo('#files');
+            });
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#progressfe_tw .progress-bar').css(
+                'width',
+                progress + '%'
+            );
+        }
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+});
+
+
+/**thumbfb**/
+$(function () {
+    'use strict';
+    var base_url1 = $('#base_url').val();    
+    // Change this to the location of your server-side upload handler:
+    var url = window.location.hostname === 'blueimp.github.io' ?
+                base_url1 : base_url1+'admin/historia/procesar/';
+    $('#fileuploadfe_fb').fileupload({
+        formData: {
+                 carpeta: 'redes'               
+          },        
+        url: url,
+        add: function(e, data) {
+        var uploadErrors = [];
+        var ext = data.originalFiles[0].name.split('.').pop().toLowerCase();
+        if($.inArray(ext, ['gif','png','jpeg','jpg']) == -1) {
+            uploadErrors.push('No es un tipo de archivo valido');
+        }
+        if(data.originalFiles[0].size > (1*1024*1024)) {//2 MB
+            uploadErrors.push('El tamaño del archivo es demasiado grande solo se permiten 1 MB como maximo');
+        }
+        if(uploadErrors.length > 0) {
+            alert(uploadErrors.join("\n"));
+        } else {
+            data.submit();
+         }
+    }, 
+        dataType: 'json',        
+        done: function (e, data) {
+            $.each(data.result.files, function (index, file) {
+                console.log(file.name);
+                $('<li/>').html('<img style="width:240px; height:180px;" src="'+base_url1+'uploads/images/redes/'+file.name+'" />'+'<input type="hidden" name="portada_fb" id="portada_fb" value="'+file.name+'" />').appendTo('#filesfe_fb ul');
+                //$('<p/>').html('<input type="hidden" name="ruta[]" id="ruta" value="'+file.name+' />').appendTo('#files');
+            });
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#progressfe_fb .progress-bar').css(
+                'width',
+                progress + '%'
+            );
+        }
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
 
 
@@ -324,7 +402,7 @@ $('#categoria').multiSelect();
         $.ajax({
             type: "POST",
             data: {message: message, name: name},
-            url: base_url1 + 'admin/buscar/ajaxPaginationDataAut',//Important: base_url is defined in the header section
+            url: base_url1 + 'admin/buscar/autores',//Important: base_url is defined in the header section
             success:function(result){
                 $(tag).dialog({
                     autoOpen: false,
@@ -364,4 +442,29 @@ $('#categoria').multiSelect();
     alert("Eliminar autor");
   $(this).closest('tr').remove();
   return false;
+});
+
+
+
+
+$(document).ready(function(){  
+    
+    
+
+    tinymce.init({
+        mode : "specific_textareas",
+    editor_selector : "mceEditor",
+      height: 300,
+      menubar: false,
+      plugins: [
+        'advlist autolink lists link image charmap print preview anchor textcolor',
+        'searchreplace visualblocks code fullscreen',
+        'insertdatetime media table contextmenu paste code help wordcount'
+      ],
+      toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+      
+    });
+
+
+
 });

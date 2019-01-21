@@ -43,11 +43,12 @@ class Autor extends My_Controller {
     $this->data['rsNacionalidad'] = $this->panel_bd->getNacionalidad();
     $this->data['rsEstados'] = $this->panel_bd->getEstados();
     $this->data['rsAvatars'] = $this->panel_bd->getAvatarComodin();
+    $this->data['rsBancos'] = $this->panel_bd->getBancos();
     $this->data['id_obj']='';
-    $this->data['estatusId']='0';
+    $this->data['estatusId']='1';
     $this->data['duracionId']='';
     $this->data['serieId']='';
-    $this->data['nacionalidadId']='';
+    $this->data['nacionalidadId']='73';
     $this->data['estadosId']='';
     $this->data['pswd_act']='';
     $this->data['portada_bg']='';
@@ -55,6 +56,8 @@ class Autor extends My_Controller {
     $this->data['teaser']='';
     $this->data['audio']='';$this->data['tipop']='';
     $this->data['arrCath']='';$this->data['muestraAvatar']='';$this->data['idAvatar']='';
+    $this->data['tipoperId']='';$this->data['generoId']='';$this->data['bancoId']='';
+
     $this->form_validation->set_rules('estatus','Por favor seleccione el estatus', 'trim|required');
     $this->form_validation->set_rules('apellido_p','Por favor escriba el apellido paterno', 'trim|required');
     $this->form_validation->set_rules('nombre','Por favor escriba el nombre', 'trim|required');
@@ -86,7 +89,6 @@ class Autor extends My_Controller {
         'cols'        => '3',
         'value' => $this->form_validation->set_value('minibio'),
         'class' => 'mceEditor form-control',
-        'required'=>'',
         'data-error'=>'Por favor escriba la copy'        
       );
 
@@ -96,8 +98,7 @@ class Autor extends My_Controller {
         'rows'        => '3',
         'cols'        => '3',
         'value' => $this->form_validation->set_value('historia'),
-        'class' => 'mceEditor form-control',
-        'required'=>'',
+      'class' => 'mceEditor form-control',  
         'data-error'=>'Por favor escriba la descripción'        
       );
 
@@ -149,7 +150,7 @@ $this->data['sucursal'] = array('name'  => 'sucursal', 'id'    => 'sucursal', 't
     $this->render('admin/autor_form', $this->data);
     }else{
     
-        $this->panel_bd->updateAutor();
+        $this->panel_bd->setAutor();
 
         redirect(base_url().'admin/autor');
      }      
@@ -166,10 +167,14 @@ $this->data['sucursal'] = array('name'  => 'sucursal', 'id'    => 'sucursal', 't
     $this->data['rsNacionalidad'] = $this->panel_bd->getNacionalidad();
     $this->data['rsEstados'] = $this->panel_bd->getEstados();
     $this->data['rsAvatars'] = $this->panel_bd->getAvatarComodin();
+    $this->data['rsBancos'] = $this->panel_bd->getBancos();
     $rsHistoria=$this->panel_bd->getRegister($id,1,'');
     if($rsHistoria) $rsHistoria=$rsHistoria[0];
     //print_r($rsHistoria); die;
-    
+    $rsFiscal=$this->panel_bd->getDatosFiscales($rsHistoria->id_register);
+    if($rsFiscal) $rsFiscal=$rsFiscal[0];
+    $rsBancario=$this->panel_bd->getDatosBanc($rsHistoria->id_register);
+    if($rsBancario) $rsBancario=$rsBancario[0];
 
     $this->data['id_obj']=$rsHistoria->id_register;
     $this->data['estatusId']=$rsHistoria->estatus_register;
@@ -179,7 +184,8 @@ $this->data['sucursal'] = array('name'  => 'sucursal', 'id'    => 'sucursal', 't
     $this->data['pswd_act']=$rsHistoria->password_register;
 $this->data['muestraAvatar']=$rsHistoria->con_avatar_register;
 $this->data['idAvatar']=$rsHistoria->id_avatar;
-  
+$this->data['tipoperId']=$rsFiscal->id_tipo_persona;$this->data['generoId']=$rsHistoria->genero_register;
+$this->data['bancoId']=$rsBancario->id_banco;  
 /*datos fiscales*/
 $this->data['tipop']='';
 /*datos bancarios*/
@@ -266,25 +272,28 @@ $this->data['tipop']='';
 
 
 /*Datos fiscales*/
- $this->data['rfc'] = array('name'  => 'rfc', 'id'    => 'rfc', 'type'  => 'text', 'value' => $this->form_validation->set_value('rfc'), 'class' => 'form-control','autocomplete'=>"off");
- $this->data['razons'] = array('name'  => 'razons', 'id'    => 'razons', 'type'  => 'text', 'value' => $this->form_validation->set_value('razons'), 'class' => 'form-control','autocomplete'=>"off");
+/*id_fiscal, id_tipo_persona, rfc_fiscal, razon_social, domiclio_fiscal, cif_archivo,*/
+ $this->data['rfc'] = array('name'  => 'rfc', 'id'    => 'rfc', 'type'  => 'text', 'value' => ($this->form_validation->set_value('rfc', $rsFiscal->rfc_fiscal)) ? $this->form_validation->set_value('rfc', $rsFiscal->rfc_fiscal) : $this->form_validation->set_value('rfc'), 'class' => 'form-control','autocomplete'=>"off");
+
+ $this->data['razons'] = array('name'  => 'razons', 'id'    => 'razons', 'type'  => 'text', 'value' => ($this->form_validation->set_value('razons', $rsFiscal->razon_social)) ? $this->form_validation->set_value('razons', $rsFiscal->razon_social) : $this->form_validation->set_value('razons'), 'class' => 'form-control','autocomplete'=>"off");
 
       $this->data['domiciliof'] = array(
         'name'  => 'domiciliof',
         'id'    => 'domiciliof',
         'rows'        => '3',
         'cols'        => '3',
-        'value' => $this->form_validation->set_value('domiciliof'),
+        'value' => ($this->form_validation->set_value('domiciliof', $rsFiscal->domiclio_fiscal)) ? $this->form_validation->set_value('domiciliof', $rsFiscal->domiclio_fiscal) : $this->form_validation->set_value('domiciliof'),
         'class' => 'form-control',
       );
- $this->data['cif'] = array('name'  => 'cif', 'id'    => 'cif', 'type'  => 'text', 'value' => $this->form_validation->set_value('cif'), 'class' => 'form-control','autocomplete'=>"off");
+ $this->data['cif'] = array('name'  => 'cif', 'id'    => 'cif', 'type'  => 'text', 'value' => ($this->form_validation->set_value('cif', $rsFiscal->cif_archivo)) ? $this->form_validation->set_value('cif', $rsFiscal->cif_archivo) : $this->form_validation->set_value('cif'), 'class' => 'form-control','autocomplete'=>"off");
 /*datos bancarios*/
-$this->data['nombre_cuenta'] = array('name'  => 'nombre_cuenta', 'id'    => 'nombre_cuenta', 'type'  => 'text', 'value' => $this->form_validation->set_value('nombre_cuenta'), 'class' => 'form-control','autocomplete'=>"off");
-$this->data['num_cuenta'] = array('name'  => 'num_cuenta', 'id'    => 'num_cuenta', 'type'  => 'text', 'value' => $this->form_validation->set_value('num_cuenta'), 'class' => 'form-control','autocomplete'=>"off");
-$this->data['clabe'] = array('name'  => 'clabe', 'id'    => 'clabe', 'type'  => 'text', 'value' => $this->form_validation->set_value('clabe'), 'class' => 'form-control','autocomplete'=>"off");
-$this->data['num_tarjeta'] = array('name'  => 'num_tarjeta', 'id'    => 'num_tarjeta', 'type'  => 'text', 'value' => $this->form_validation->set_value('num_tarjeta'), 'class' => 'form-control','autocomplete'=>"off");
-$this->data['num_cliente'] = array('name'  => 'num_cliente', 'id'    => 'num_cliente', 'type'  => 'text', 'value' => $this->form_validation->set_value('num_cliente'), 'class' => 'form-control','autocomplete'=>"off");
-$this->data['sucursal'] = array('name'  => 'sucursal', 'id'    => 'sucursal', 'type'  => 'text', 'value' => $this->form_validation->set_value('sucursal'), 'class' => 'form-control','autocomplete'=>"off");
+/*id_dato_bancario, nombre_titular_banco, cuenta_banco, clabe_banco, numero_tarjeta_banco, id_register, id_banco, sucursal_banco, numero_cliente_banco*/
+$this->data['nombre_cuenta'] = array('name'  => 'nombre_cuenta', 'id'    => 'nombre_cuenta', 'type'  => 'text', 'value' => ($this->form_validation->set_value('nombre_cuenta', $rsBancario->nombre_titular_banco)) ? $this->form_validation->set_value('nombre_cuenta', $rsBancario->nombre_titular_banco) : $this->form_validation->set_value('nombre_cuenta'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['num_cuenta'] = array('name'  => 'num_cuenta', 'id'    => 'num_cuenta', 'type'  => 'text', 'value' => ($this->form_validation->set_value('num_cuenta', $rsBancario->cuenta_banco)) ? $this->form_validation->set_value('num_cuenta', $rsBancario->cuenta_banco) : $this->form_validation->set_value('num_cuenta'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['clabe'] = array('name'  => 'clabe', 'id'    => 'clabe', 'type'  => 'text', 'value' => ($this->form_validation->set_value('clabe', $rsBancario->clabe_banco)) ? $this->form_validation->set_value('clabe', $rsBancario->clabe_banco) : $this->form_validation->set_value('clabe'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['num_tarjeta'] = array('name'  => 'num_tarjeta', 'id'    => 'num_tarjeta', 'type'  => 'text', 'value' => ($this->form_validation->set_value('num_tarjeta', $rsBancario->numero_tarjeta_banco)) ? $this->form_validation->set_value('num_tarjeta', $rsBancario->numero_tarjeta_banco) : $this->form_validation->set_value('num_tarjeta'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['num_cliente'] = array('name'  => 'num_cliente', 'id'    => 'num_cliente', 'type'  => 'text', 'value' => ($this->form_validation->set_value('num_cliente', $rsBancario->numero_cliente_banco)) ? $this->form_validation->set_value('num_cliente', $rsBancario->numero_cliente_banco) : $this->form_validation->set_value('num_cliente'), 'class' => 'form-control','autocomplete'=>"off");
+$this->data['sucursal'] = array('name'  => 'sucursal', 'id'    => 'sucursal', 'type'  => 'text', 'value' => ($this->form_validation->set_value('sucursal', $rsBancario->sucursal_banco)) ? $this->form_validation->set_value('sucursal', $rsBancario->sucursal_banco) : $this->form_validation->set_value('sucursal'), 'class' => 'form-control','autocomplete'=>"off");
 
 
 

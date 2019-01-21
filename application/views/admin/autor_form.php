@@ -71,7 +71,7 @@
 
 <div class="col-md-6 col-sm-12 col-xs-12">
 	<label for="genero">Género:</label><br/>
-	<input type="radio" name="genero" value="1" id="id_genero1">&nbsp;Femenino&nbsp;&nbsp;<input type="radio" name="genero" value="2" id="id_genero2">&nbsp;Masculino<br/><br/>
+	<input type="radio" name="genero" value="1" <?=($generoId==1)? "checked='checked'":""; ?> id="id_genero1">&nbsp;Femenino&nbsp;&nbsp;<input type="radio" name="genero" <?=($generoId==2)? "checked='checked'":""; ?> value="2" id="id_genero2">&nbsp;Masculino<br/><br/>
 	<div class="help-block with-errors"></div>
 	</div>
 
@@ -181,9 +181,9 @@
 	<div class="col-md-4 col-sm-6 col-xs-12">
 	<div class="form-group"><br/>
 	<label for="tipo">Tipo persona:</label>
-		<input id="tipop1" name="tipo_persona" type="radio" class="" <?php if($tipop=='0') echo "checked='checked'"; ?> value="0" <?php echo $this->form_validation->set_radio('tipop', 0); ?> />
+		<input id="tipop1" name="tipo_persona" type="radio" class="" <?php if($tipoperId=='0' || $tipoperId=='') echo "checked='checked'"; ?> value="0" <?php echo $this->form_validation->set_radio('tipop', 0); ?> />
         <label for="permanente" class="">Física</label>
-        <input id="tipop2" name="tipo_persona" type="radio" class="" <?php if($tipop=='1') echo "checked='checked'"; ?> value="1" <?php echo $this->form_validation->set_radio('tipop', 1); ?> />
+        <input id="tipop2" name="tipo_persona" type="radio" class="" <?php if($tipoperId=='1') echo "checked='checked'"; ?> value="1" <?php echo $this->form_validation->set_radio('tipop', 1); ?> />
         <label for="permanente" class="">Moral</label>
 	</div>
 	</div>
@@ -252,13 +252,16 @@
 	</div>
 	</div>
 
-	<div class="col-md-4 col-sm-6 col-xs-12">
-	<div class="form-group"><br/>
-	<label for="banco">Banco:</label>
-	<div class="help-block with-errors"></div>	
-	</div>
-	</div>
 
+<div class="col-md-4 col-sm-6 col-xs-12">
+	<label for="banco">Banco</label>
+	<select id="banco" name="banco"  class="form-control">
+	<option>--</option>
+	<?php
+	foreach($rsBancos as $banco) { ($bancoId==$banco->id_banco) ? $selp=' selected="selected" ': $selp=''; 
+	echo '<option '.$selp.' value="'.$banco->id_banco.'">'.$banco->banco.'</option>'; } ?>
+	</select><div class="help-block with-errors"></div>
+	</div>
 
 	<div class="col-md-4 col-sm-6 col-xs-12">
 	<div class="form-group"><br/>

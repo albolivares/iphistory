@@ -90,12 +90,12 @@
             <?php echo form_input($fecha_fin_hist);?><span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span><div class="help-block with-errors"></div>
           </div>    
     </div>
-	<div class="col-md-1 col-xs-2">
+	<div class="col-md-2 col-xs-2">
 		    <div class="form-group" style="margin-top: 10px">
-           <label for="hashtag_hist">Hastag:</label>
+           <label for="hashtag_hist">Palabras clave:</label>
           </div>
     </div>
-    <div class="col-md-4 col-xs-10">      
+    <div class="col-md-3 col-xs-10">      
       <div class="form-group">
 
             <?php echo form_input($hashtag_hist);?><div class="help-block with-errors"></div>
@@ -105,7 +105,7 @@
      <div class="form-group">                 
 	    <span class="fileinput-button button " tabindex="6">        
 	        <span><i class="glyphicon glyphicon-camera" aria-hidden="true"></i>
-	            Portada (300px X 300px)</span>
+	            Portada (540px X 540px)</span>
 	        <!-- The file input field used as target for the file upload widget -->
 	        <input id="fileuploadfe" type="file" name="files[]"  >        
 	    </span>
@@ -147,6 +147,56 @@
 	    </div>
 	</div>
 </div>	
+
+
+	<div class="col-md-6">
+     <div class="form-group">                 
+	    <span class="fileinput-button button " tabindex="6">        
+	        <span><i class="glyphicon glyphicon-camera" aria-hidden="true"></i>
+	            Portada Facebook (403px X 403px)</span>
+	        <!-- The file input field used as target for the file upload widget -->
+	        <input id="fileuploadfe_fb" type="file" name="files[]"  >        
+	    </span>
+	    <br>
+	    <br>
+	    <!-- The global progress bar -->
+	    <div id="progressfe_fb" class="progress">
+	        <div class="progress-bar progress-bar-success"></div>
+	    </div>
+	    <!-- The container for the uploaded files -->
+	    <div id="filesfe_fb" class="files">
+	        <ul class="listaimg">
+	        	<?php if($portada_fb){ echo '<img style="width:240px; height:180px;" src="'.base_url().'uploads/images/redes/'.$portada_fb.'" /><input type="hidden" name="portada_fb" id="portada_fb" value="'.$portada_fb.'" />'; } ?>
+	           
+	        </ul>
+	    </div>
+	</div>
+</div>
+
+	<div class="col-md-6">
+     <div class="form-group">                 
+	    <span class="fileinput-button button " tabindex="6">        
+	        <span><i class="glyphicon glyphicon-camera" aria-hidden="true"></i>
+	            Portada twitter (520px X 254px)</span>
+	        <!-- The file input field used as target for the file upload widget -->
+	        <input id="fileuploadfe_tw" type="file" name="files[]"  >        
+	    </span>
+	    <br>
+	    <br>
+	    <!-- The global progress bar -->
+	    <div id="progressfe_tw" class="progress">
+	        <div class="progress-bar progress-bar-success"></div>
+	    </div>
+	    <!-- The container for the uploaded files -->
+	    <div id="filesfe_tw" class="files">
+	        <ul class="listaimg">
+	        	<?php if($portada_tw){ echo '<img style="width:240px; height:180px;" src="'.base_url().'uploads/images/redes/'.$portada_tw.'" /><input type="hidden" name="portada_tw" id="portada_tw" value="'.$portada_sm.'" />'; } ?>
+	           
+	        </ul>
+	    </div>
+	</div>
+</div>
+
 	<div class="col-md-12 col-xs-12">
 
 	<div class="" role="tabpanel" data-example-id="togglable-tabs">

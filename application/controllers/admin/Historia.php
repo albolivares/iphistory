@@ -47,7 +47,7 @@ class Historia extends My_Controller {
     $this->data['registerId']='';
 
     $this->data['portada_bg']='';
-    $this->data['portada_sm']='';
+    $this->data['portada_sm']='';$this->data['portada_fb']=''; $this->data['portada_tw']='';
     $this->data['teaser']='';
     $this->data['audio']='';
     $this->data['arrCath']='';
@@ -74,8 +74,8 @@ $this->data['autor'] = array('name'  => 'autor', 'id'    => 'autor', 'type'  => 
         'rows'        => '3',
         'cols'        => '3',
         'value' => $this->form_validation->set_value('copy_hist'),
-        'class' => 'form-control',
-        'required'=>'',
+        'class' => 'mceEditor form-control',
+        
         'data-error'=>'Por favor escriba la copy'        
       );
 
@@ -85,8 +85,8 @@ $this->data['autor'] = array('name'  => 'autor', 'id'    => 'autor', 'type'  => 
         'rows'        => '3',
         'cols'        => '3',
         'value' => $this->form_validation->set_value('historia'),
-        'class' => 'form-control',
-        'required'=>'',
+        'class' => 'mceEditor form-control',
+        
         'data-error'=>'Por favor escriba la descripción'        
       );
 
@@ -96,9 +96,7 @@ $this->data['autor'] = array('name'  => 'autor', 'id'    => 'autor', 'type'  => 
         'type'  => 'text',
         'value' => $this->form_validation->set_value('fecha_inicio_hist'),
         'class' => 'form-control date-picker ginput_container',
-        'required'=>'',
         'maxlength'=>10,
-        'data-error'=>'Por favor escriba la fecha de inicio.',
         'autocomplete'=>"off"
       );
 
@@ -108,9 +106,7 @@ $this->data['autor'] = array('name'  => 'autor', 'id'    => 'autor', 'type'  => 
         'type'  => 'text',
         'value' => $this->form_validation->set_value('fecha_fin_hist'),
         'class' => 'form-control date-picker ginput_container',
-        'required'=>'',
         'maxlength'=>10,
-        'data-error'=>'Por favor escriba la fecha de inicio.',
         'autocomplete'=>"off"
       );
 
@@ -146,6 +142,7 @@ $this->data['autor'] = array('name'  => 'autor', 'id'    => 'autor', 'type'  => 
     $this->data['audio']=$rsHistoria->archivo_audio;
 $this->data['registerId']=$rsHistoria->id_register;
 $nom_register=$rsHistoria->nombre_register.' '.$rsHistoria->ap_paterno_register.' ('.$rsHistoria->pseudonimo_register.')';
+$this->data['portada_fb']=$rsHistoria->portada_fb; $this->data['portada_tw']=$rsHistoria->portada_tw;
 
     $rscath=$this->panel_bd->getHistCategoria($id);
     $arrCath=array();
@@ -183,7 +180,7 @@ $nom_register=$rsHistoria->nombre_register.' '.$rsHistoria->ap_paterno_register.
         'rows'        => '3',
         'cols'        => '3',
         'value' => ($this->form_validation->set_value('copy_hist', $rsHistoria->copy_hist)) ? $this->form_validation->set_value('copy_hist', $rsHistoria->copy_hist) : $this->form_validation->set_value('copy_hist'),
-        'class' => 'form-control',
+        'class' => 'mceEditor form-control',
         'required'=>'',
         'data-error'=>'Por favor escriba la copy'        
       );
@@ -194,7 +191,7 @@ $nom_register=$rsHistoria->nombre_register.' '.$rsHistoria->ap_paterno_register.
         'rows'        => '3',
         'cols'        => '3',
         'value' => ($this->form_validation->set_value('historia', $rsHistoria->historia)) ? $this->form_validation->set_value('historia', $rsHistoria->historia) : $this->form_validation->set_value('historia'),
-        'class' => 'form-control',
+        'class' => 'mceEditor form-control',
         'required'=>'',
         'data-error'=>'Por favor escriba la descripción'        
       );

@@ -38,6 +38,49 @@ class Buscar extends CI_Controller {
         //load the view
         $this->load->view('buscar/index', $data);
     }
+
+
+
+    public function autores(){
+        $data = array();
+        
+        //total rows count
+        $totalRec = count($this->post->getRowsAut());
+        //pagination configuration
+        $config['target']      = '#postList';
+        $config['base_url']    = base_url().'posts/ajaxPaginationDataAut';
+        $config['total_rows']  = $totalRec;
+        $config['per_page']    = $this->perPage;
+        $config['link_func']   = 'searchFilter';
+        $this->ajax_pagination->initialize($config);
+        
+        //get the posts data
+        $data['posts'] = $this->post->getRowsAut(array('limit'=>$this->perPage));
+        
+        //load the view
+        $this->load->view('admin/busca_autores', $data);
+    }
+
+
+    public function historias(){
+        $data = array();
+        
+        //total rows count
+        $totalRec = count($this->post->getRows());
+        //pagination configuration
+        $config['target']      = '#postList';
+        $config['base_url']    = base_url().'posts/ajaxPaginationData';
+        $config['total_rows']  = $totalRec;
+        $config['per_page']    = $this->perPage;
+        $config['link_func']   = 'searchFilter';
+        $this->ajax_pagination->initialize($config);
+        
+        //get the posts data
+        $data['posts'] = $this->post->getRows(array('limit'=>$this->perPage));
+        
+        //load the view
+        $this->load->view('admin/busca_historias', $data);
+    }
     
     public function prueba(){
      $this->load->view('buscar/prueba');   

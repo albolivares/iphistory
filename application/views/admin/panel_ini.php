@@ -20,7 +20,7 @@
                         <tr>
                           <th>Título</th>
                           <th>Autor</th>
-                          <th>Categoría</th>
+                          <th>Pseudonimo</th>
                           <th>Fecha de captura</th>
                           <th>Fecha de publicación</th>
                           <th>Vigencia</th>
@@ -34,8 +34,8 @@
                           <tr>
                           
                             <td><?=$value->titulo_hist?></td>
-                            <td><?=$value->nombre_register.' '.$value->ap_paterno_register.' ('.$value->pseudonimo_register.')'?></td>
-                            <td></td>
+                            <td><?=$value->nombre_register.' '.$value->ap_paterno_register?></td>
+                            <td>$value->pseudonimo_register</td>
                             <td><?=$value->fecha_captura_hist?></td>
                             <td><?=$value->fecha_publicacion_hist?></td>
                             <td><?=$value->fecha_fin_hist?></td>
